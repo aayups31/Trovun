@@ -1,6 +1,6 @@
 const missingEnvironmentVariable = (name: string) =>
   new Error(
-    `Missing ${name}. Add the Supabase project credentials to .env.local before starting UniMarket.`,
+    `Missing ${name}. Add the Supabase project credentials to .env.local before starting Trovun.`,
   );
 
 export function getPublicSupabaseConfig() {

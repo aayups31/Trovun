@@ -1,6 +1,6 @@
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 import { getMarketplaceCategoryPresentation } from '../category-presentation';
 import type { MarketplaceCategory } from '../types';
@@ -16,20 +16,15 @@ export function CategoryFilters({ categories, activeCategory, query }: CategoryF
   return (
     <nav
       aria-label="Listing categories"
-      className="mx-auto max-w-um-content px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8"
+      className="mx-auto max-w-um-content px-4 pt-5 sm:px-6 sm:pt-6 lg:px-8"
     >
-      <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
-        <div>
-          <p className="text-[0.64rem] font-bold uppercase tracking-[0.2em] text-um-gold-300/80">
-            Marketplace index
-          </p>
-          <h2 className="mt-1.5 text-xl font-bold tracking-[-0.035em] text-white sm:text-2xl">
-            Browse Waterloo
-          </h2>
-        </div>
+      <div className="mb-3.5 flex items-center justify-between gap-4 sm:mb-4">
+        <h2 className="text-sm font-semibold tracking-[-0.015em] text-white/72">
+          Find your kind of thing
+        </h2>
         <Link
           aria-current={!activeCategory ? 'page' : undefined}
-          className="group/all inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs font-semibold text-white/56 transition duration-160 hover:bg-white/[0.06] hover:text-white focus-visible:ring-2 focus-visible:ring-um-gold-300 sm:text-sm"
+          className="group/all inline-flex min-h-10 items-center gap-2 rounded-full px-2 text-xs font-semibold text-white/48 transition duration-160 hover:text-white focus-visible:ring-2 focus-visible:ring-um-gold-300"
           href={marketplaceHref({ query })}
         >
           All listings
@@ -40,7 +35,7 @@ export function CategoryFilters({ categories, activeCategory, query }: CategoryF
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[1.15rem] border border-white/[0.1] bg-white/[0.08] shadow-[0_24px_70px_rgba(0,0,0,0.18)] sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {categories.map((category) => (
           <CategoryLink
             active={activeCategory === category.slug}
@@ -69,38 +64,43 @@ function CategoryLink({ href, active, label, slug }: CategoryLinkProps) {
     <Link
       aria-current={active ? 'page' : undefined}
       aria-label={label}
-      className={`group/category relative isolate min-h-[9.5rem] overflow-hidden bg-[#090d13] transition duration-300 ease-um-out focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-um-gold-300 sm:min-h-[12rem] lg:min-h-[13rem] ${
-        active ? 'ring-1 ring-inset ring-um-gold-300/60' : ''
+      className={`group/category relative isolate min-h-[6.8rem] overflow-hidden rounded-[0.9rem] border bg-[#090d13] shadow-[0_18px_46px_rgba(0,0,0,0.2)] transition duration-500 ease-um-out focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-um-gold-300 sm:min-h-[8.5rem] sm:rounded-[1.1rem] ${
+        active
+          ? 'border-um-gold-300/45 shadow-[0_20px_56px_rgba(158,117,12,0.14)]'
+          : 'border-white/[0.07] hover:-translate-y-1 hover:border-white/[0.16] hover:shadow-[0_26px_64px_rgba(0,0,0,0.3)]'
       }`}
       href={href}
     >
       <Image
         alt=""
-        className={`object-cover opacity-50 saturate-[0.72] transition duration-700 ease-um-out group-hover/category:scale-[1.035] group-hover/category:opacity-72 group-focus-visible/category:scale-[1.035] group-focus-visible/category:opacity-72 ${presentation.imagePosition}`}
+        className={`object-cover opacity-[0.8] saturate-[0.78] transition duration-1000 ease-um-out group-hover/category:scale-[1.045] group-hover/category:opacity-[0.76] group-focus-visible/category:scale-[1.045] group-focus-visible/category:opacity-[0.76] ${presentation.imagePosition}`}
         fill
-        quality={92}
-        sizes="(min-width: 640px) 25vw, 50vw"
+        quality={75}
+        sizes="(min-width: 1320px) 302px, (min-width: 1024px) calc(25vw - 28px), (min-width: 640px) calc(25vw - 24px), calc(50vw - 22px)"
         src={presentation.image}
       />
       <span
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,6,10,0.05)_0%,rgba(4,6,10,0.16)_38%,rgba(4,6,10,0.92)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(0deg,rgba(4,7,12,0.3)_0%,rgba(4,7,12,0.25)_58%,rgba(4,7,12,0.16)_100%)]"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-[#071015]/90 via-transparent to-transparent"
       />
       <span
         aria-hidden="true"
         className={`absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t ${presentation.accent} via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover/category:opacity-100 group-focus-visible/category:opacity-100`}
       />
 
-      <span className="absolute inset-x-0 top-0 z-10 flex items-center justify-end p-3.5 sm:p-4">
-        <span className="grid size-8 place-items-center rounded-full border border-white/[0.12] bg-black/20 text-white/50 backdrop-blur-md transition duration-300 group-hover/category:border-um-gold-300/45 group-hover/category:bg-um-gold-300 group-hover/category:text-um-ink-950 group-focus-visible/category:border-um-gold-300/45 group-focus-visible/category:bg-um-gold-300 group-focus-visible/category:text-um-ink-950 sm:size-9">
-          <ArrowUpRight aria-hidden="true" className="size-3.5" strokeWidth={1.8} />
-        </span>
-      </span>
-
-      <span className="absolute inset-x-0 bottom-0 z-10 p-3.5 sm:p-4">
-        <span className="block text-[1.05rem] font-bold leading-none tracking-[-0.035em] text-white sm:text-xl lg:text-[1.35rem]">
+      <span className="absolute inset-0 z-10 flex items-end justify-between gap-2 p-4 sm:p-5">
+        <span className="block text-[1rem] font-bold leading-tight tracking-[-0.03em] text-white sm:text-[1.2rem]">
           {label}
         </span>
+        <ArrowRight
+          aria-hidden="true"
+          className="size-4 shrink-0 text-um-gold-300 opacity-80 transition-transform duration-300 group-hover/category:translate-x-1"
+          strokeWidth={1.8}
+        />
       </span>
     </Link>
   );

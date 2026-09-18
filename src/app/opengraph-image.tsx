@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'UniMarket — the student marketplace for Waterloo';
+export const alt = 'Trovun — the student marketplace for Waterloo';
 export const size = {
   width: 1200,
   height: 630,
@@ -40,10 +40,10 @@ export default function OpenGraphImage() {
             width: 82,
           }}
         >
-          U
+          T
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.5px' }}>UniMarket</span>
+          <span style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.5px' }}>Trovun</span>
           <span
             style={{
               color: 'rgba(247,244,238,.52)',

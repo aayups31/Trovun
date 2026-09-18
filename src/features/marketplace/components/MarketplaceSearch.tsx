@@ -20,7 +20,7 @@ export function MarketplaceSearch({ query, category, scopePath }: MarketplaceSea
       action={action}
       method="get"
       role="search"
-      className="group/search flex w-full items-center gap-1.5 rounded-[0.9rem] border border-white/[0.13] bg-black/[0.45] p-1.5 shadow-[0_24px_70px_rgba(0,0,0,0.28)] backdrop-blur-md transition duration-220 ease-um-out focus-within:border-um-gold-400/56 focus-within:bg-black/60 focus-within:shadow-[0_24px_74px_rgba(0,0,0,0.4)]"
+      className="group/search flex w-full items-center gap-1 rounded-[0.85rem] border border-white/[0.12] bg-[#05080d]/68 p-1 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-xl transition duration-220 ease-um-out focus-within:border-um-gold-400/48 focus-within:bg-[#05080d]/84"
     >
       <Search
         aria-hidden="true"
@@ -32,7 +32,7 @@ export function MarketplaceSearch({ query, category, scopePath }: MarketplaceSea
       </label>
       <input
         autoComplete="off"
-        className="h-12 min-w-0 flex-1 scroll-mt-24 appearance-none border-0 bg-transparent px-1 text-base font-medium text-white outline-none placeholder:font-normal placeholder:text-white/48 sm:h-14 sm:px-2 sm:text-lg"
+        className="h-11 min-w-0 flex-1 scroll-mt-24 appearance-none border-0 bg-transparent px-1 text-[0.98rem] font-medium text-white outline-none placeholder:font-normal placeholder:text-white/38 sm:h-12 sm:px-2 sm:text-base"
         defaultValue={query}
         id="marketplace-search"
         maxLength={80}
@@ -52,7 +52,7 @@ export function MarketplaceSearch({ query, category, scopePath }: MarketplaceSea
       ) : null}
       <button
         aria-label="Search listings"
-        className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-[0.65rem] bg-um-gold-300 px-3.5 text-sm font-bold text-um-ink-950 transition duration-160 ease-um-out hover:bg-um-gold-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:h-[3.25rem] sm:px-5"
+        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-[0.62rem] bg-um-gold-300 px-3.5 text-sm font-bold text-um-ink-950 transition duration-160 ease-um-out hover:bg-um-gold-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:h-11 sm:px-4"
         type="submit"
       >
         <span className="hidden sm:inline">Search</span>

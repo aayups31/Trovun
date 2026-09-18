@@ -1,10 +1,19 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowLeft, ArrowUpRight, Check, LoaderCircle, MessageCircle, Send, X } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Check,
+  LoaderCircle,
+  MessageCircle,
+  Send,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 
@@ -158,6 +167,12 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
     };
 
     window.addEventListener(OPEN_MESSAGES_EVENT, handleOpen);
+    if (window.location.pathname === '/messages') {
+      const requested = new URLSearchParams(window.location.search).get('conversation');
+      if (requested && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requested)) {
+        handleOpen(new CustomEvent(OPEN_MESSAGES_EVENT, { detail: { conversationId: requested } }));
+      }
+    }
     return () => window.removeEventListener(OPEN_MESSAGES_EVENT, handleOpen);
   }, []);
 
@@ -251,23 +266,23 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/55 backdrop-blur-[3px] data-[state=closed]:animate-out data-[state=open]:animate-in" />
+        <Dialog.Overlay className="fixed inset-0 z-[70] bg-[#02050a]/72 backdrop-blur-[5px] data-[state=closed]:animate-out data-[state=open]:animate-in" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed inset-0 z-[80] overflow-hidden bg-[#080c13] text-white shadow-[0_40px_120px_rgba(0,0,0,0.55)] focus:outline-none sm:inset-y-4 sm:left-auto sm:right-4 sm:w-[min(58rem,calc(100vw-2rem))] sm:rounded-[1.65rem] sm:border sm:border-white/[0.1]"
+          className="fixed inset-0 z-[80] overflow-hidden border-white/[0.09] bg-[#07101a]/96 text-white shadow-[0_40px_120px_rgba(0,0,0,0.58)] focus:outline-none sm:inset-y-4 sm:left-auto sm:right-4 sm:w-[min(58rem,calc(100vw-2rem))] sm:rounded-[1.35rem] sm:border"
         >
           <Dialog.Title className="sr-only">Messages</Dialog.Title>
           <div className="grid h-full min-h-0 sm:grid-cols-[19rem_minmax(0,1fr)]">
             <aside
               className={cn(
-                'min-h-0 border-white/[0.08] bg-[#0b1018] sm:flex sm:flex-col sm:border-r',
+                'min-h-0 border-white/[0.07] bg-[#09131e]/94 sm:flex sm:flex-col sm:border-r',
                 mobileListVisible ? 'flex flex-col' : 'hidden',
               )}
             >
               <div className="flex h-[4.6rem] shrink-0 items-center justify-between border-b border-white/[0.08] px-5">
                 <div>
                   <p className="font-condensed text-[0.65rem] font-bold uppercase tracking-[0.18em] text-um-gold-300">
-                    UniMarket
+                    Trovun
                   </p>
                   <h2 className="mt-0.5 text-lg font-bold tracking-[-0.035em]">Messages</h2>
                 </div>
@@ -314,7 +329,7 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
 
             <section
               className={cn(
-                'min-h-0 bg-[radial-gradient(circle_at_70%_0%,rgba(231,188,53,0.07),transparent_24rem),#080c13] sm:flex sm:flex-col',
+                'min-h-0 bg-[radial-gradient(circle_at_72%_0%,rgba(231,188,53,0.065),transparent_24rem),radial-gradient(circle_at_15%_100%,rgba(25,83,132,0.12),transparent_28rem),#07101a] sm:flex sm:flex-col',
                 mobileListVisible ? 'hidden' : 'flex flex-col',
               )}
             >
@@ -448,15 +463,15 @@ function ConversationHeader({
   onNavigate: () => void;
 }) {
   const linked = Boolean(conversation.listingId && conversation.listingStatus === 'published');
-  const content = (
+  const listingContent = (
     <>
       <ListingThumb conversation={conversation} size="sm" />
       <span className="min-w-0">
         <span className="block truncate text-sm font-bold tracking-[-0.025em] text-white">
           {conversation.listingTitle}
         </span>
-        <span className="mt-0.5 block truncate text-xs text-white/45">
-          {conversation.counterpartName}
+        <span className="mt-0.5 block truncate text-xs text-white/38">
+          {linked ? 'View listing' : 'Listing unavailable'}
         </span>
       </span>
       {linked ? (
@@ -482,11 +497,23 @@ function ConversationHeader({
           href={`/listings/${conversation.listingId}`}
           onClick={onNavigate}
         >
-          {content}
+          {listingContent}
         </Link>
       ) : (
-        <div className="flex min-w-0 flex-1 items-center gap-3 p-1.5">{content}</div>
+        <div className="flex min-w-0 flex-1 items-center gap-3 p-1.5">{listingContent}</div>
       )}
+
+      <Link
+        aria-label={`View ${conversation.counterpartName}'s profile`}
+        className="group/profile flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.035] px-3 text-xs font-semibold text-white/58 transition hover:border-um-gold-300/28 hover:bg-um-gold-300/[0.08] hover:text-white focus-visible:ring-2 focus-visible:ring-um-gold-400"
+        href={`/profile/${conversation.counterpartId}`}
+        title={`View ${conversation.counterpartName}'s profile`}
+        onClick={onNavigate}
+      >
+        <UserRound className="size-3.5 text-um-gold-300" aria-hidden="true" />
+        <span className="md:hidden">Profile</span>
+        <span className="hidden max-w-28 truncate md:block">{conversation.counterpartName}</span>
+      </Link>
 
       <Dialog.Close
         aria-label="Close messages"

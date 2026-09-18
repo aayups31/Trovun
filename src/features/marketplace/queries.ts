@@ -11,7 +11,8 @@ import type {
   MarketplaceSeller,
   MarketplaceViewer,
 } from './types';
-import { marketplaceSearchTerms, normalizeMarketplaceQuery } from './url';
+import { normalizeMarketplaceQuery } from './url';
+import { marketplaceSearchGroups, marketplaceTermFilter, relatedMarketplaceTerms } from './search';
 
 const LISTING_COLUMNS = [
   'id',
@@ -159,8 +160,8 @@ export async function getMarketplacePage(
   if (explicitCategory) {
     recentQuery = recentQuery.eq('category_slug', explicitCategory.slug);
   }
-  for (const term of marketplaceSearchTerms(query)) {
-    recentQuery = recentQuery.or(buildMarketplaceSearchFilter(term));
+  for (const group of marketplaceSearchGroups(query)) {
+    recentQuery = recentQuery.or(group.map(marketplaceTermFilter).join(','));
   }
 
   const featuredQuery = supabase
@@ -173,7 +174,7 @@ export async function getMarketplacePage(
   const shouldLoadFeatured = page === 1 && !query && !explicitCategory;
 
   const [recentResult, featuredResult] = await Promise.all([
-    recentQuery,
+    query ? rankedSearch(supabase, query, explicitCategory?.slug, from, recentQuery) : recentQuery,
     shouldLoadFeatured ? featuredQuery : Promise.resolve({ data: [], error: null }),
   ]);
 
@@ -419,13 +420,43 @@ function toPublicDisplayName(value: string | null | undefined) {
   return `${parts[0]} ${parts.at(-1)?.charAt(0).toUpperCase()}.`;
 }
 
-function buildMarketplaceSearchFilter(query: string) {
-  const pattern = `%${query}%`;
-  return [
-    `title.ilike.${pattern}`,
-    `description.ilike.${pattern}`,
-    `category_name.ilike.${pattern}`,
-  ].join(',');
+async function rankedSearch(
+  supabase: SupabaseServerClient,
+  query: string,
+  category: string | undefined,
+  offset: number,
+  fallback: PromiseLike<{ data: unknown; error: unknown; count: number | null }>,
+) {
+  const { data, error } = await supabase.rpc('search_marketplace', {
+    p_query: query,
+    p_related_terms: relatedMarketplaceTerms(query),
+    p_category_slug: category ?? null,
+    p_limit: MARKETPLACE_PAGE_SIZE,
+    p_offset: offset,
+  });
+  // Rolling deployments stay usable before the forward migration is installed.
+  if (error?.code === 'PGRST202') return await fallback;
+  if (error) throw new MarketplaceDataError();
+  if (
+    !data ||
+    typeof data !== 'object' ||
+    Array.isArray(data) ||
+    !Array.isArray(data.ids) ||
+    typeof data.total !== 'number'
+  ) {
+    throw new MarketplaceDataError();
+  }
+  const ids = data.ids.filter((id): id is string => typeof id === 'string');
+  if (!ids.length) return { data: [], error: null, count: data.total };
+  const result = await supabase
+    .from('marketplace_listings')
+    .select(MARKETPLACE_VIEW_COLUMNS)
+    .in('id', ids);
+  if (result.error) throw new MarketplaceDataError();
+  const byId = new Map(
+    ((result.data ?? []) as unknown as MarketplaceViewRow[]).map((row) => [row.id, row]),
+  );
+  return { data: ids.flatMap((id) => byId.get(id) ?? []), error: null, count: data.total };
 }
 
 function clampPage(value: number | undefined) {

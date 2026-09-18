@@ -19,7 +19,7 @@ type LoginPageProps = {
 };
 
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
-  'ineligible-account': 'Use an eligible UniMarket account to continue.',
+  'ineligible-account': 'Use an eligible Trovun account to continue.',
   'invalid-link': 'That verification link is invalid or expired. Request a new one from signup.',
   'profile-unavailable': "We verified the email but couldn't prepare the account. Try again.",
   'session-expired': 'Your web session expired after three days of inactivity. Sign in again.',

@@ -355,7 +355,7 @@ static void DrawAccessScene(CGFloat time, UMAssets assets) {
   CGFloat authAlpha = sceneAlpha * (1 - welcome);
   if (authAlpha > 0.001) {
     DrawLogo(assets.logo, TopRect(126, panelY + 40, 42, 42), authAlpha);
-    DrawText(@"UNIMARKET", TopRect(184, panelY + 44, 260, 30), 17,
+    DrawText(@"TROVUN", TopRect(184, panelY + 44, 260, 30), 17,
              NSFontWeightBold, RGB(239, 235, 224, 0.92 * authAlpha), 1.1,
              NSTextAlignmentLeft, NO);
     DrawText(@"STUDENT ACCESS", TopRect(126, panelY + 112, 300, 24), 12,
@@ -434,7 +434,7 @@ static void DrawAccessScene(CGFloat time, UMAssets assets) {
     [RGB(91, 203, 142, 0.92 * alpha) setFill];
     [[NSBezierPath bezierPathWithOvalInRect:TopRect(144, panelY + 400, 9, 9)]
         fill];
-    DrawText(@"CAMPUS OPEN", TopRect(170, panelY + 393, 280, 24), 11,
+    DrawText(@"MARKET OPEN", TopRect(170, panelY + 393, 280, 24), 11,
              NSFontWeightSemibold, RGB(236, 233, 224, 0.55 * alpha), 2.3,
              NSTextAlignmentLeft, NO);
   }
@@ -549,7 +549,7 @@ static void DrawBrowseScene(CGFloat time, UMAssets assets) {
   NSRectFill(screen);
 
   DrawLogo(assets.logo, TopRect(116, deviceY + 48, 30, 30), reveal);
-  DrawText(@"MARKETPLACE", TopRect(160, deviceY + 52, 240, 24), 12,
+  DrawText(@"TROVUN MARKET", TopRect(160, deviceY + 52, 240, 24), 12,
            NSFontWeightBold, RGB(238, 234, 224, 0.9 * reveal), 1.1,
            NSTextAlignmentLeft, NO);
 
@@ -855,6 +855,12 @@ static void DrawNetworkScene(CGFloat time, UMAssets assets) {
     DrawPersonNode(rightPoints[0].pointValue, @"A", 62, endpointAlpha);
     DrawPersonNode(rightPoints[1].pointValue, @"M", 70, endpointAlpha);
     DrawPersonNode(rightPoints[2].pointValue, @"S", 58, endpointAlpha);
+
+    DrawText(@"ONE VERIFIED WATERLOO EXCHANGE",
+             TopRect(196, 790 + worldY, 328, 26), 9.5,
+             NSFontWeightSemibold,
+             RGB(242, 213, 111, 0.55 * endpointAlpha), 2.4,
+             NSTextAlignmentCenter, NO);
   }
 
   [NSGraphicsContext restoreGraphicsState];
@@ -1002,7 +1008,7 @@ int main(int argc, const char *argv[]) {
     // Keep strong owners alive for the full render. UMAssets intentionally
     // stores non-owning pointers so it can remain a plain C value passed into
     // draw calls.
-    NSImage *logo = LoadImage(root, @"public/brand/unimarket-mark.png");
+    NSImage *logo = LoadImage(root, @"public/brand/trovun-mark.png");
     NSImage *badge =
         LoadImage(root, @"public/waterloo/uwaterloo-circle-badge.webp");
     NSImage *electronics = LoadImage(

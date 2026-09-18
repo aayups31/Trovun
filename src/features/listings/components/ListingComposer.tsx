@@ -1,12 +1,14 @@
 'use client';
 
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Switch from '@radix-ui/react-switch';
 import {
   Armchair,
+  ArrowLeft,
+  ArrowRight,
   BookOpenText,
   Check,
   Eye,
@@ -94,7 +96,7 @@ const STEPS = [
   { href: '#images', label: 'Photos' },
   { href: '#details', label: 'Details' },
   { href: '#pricing', label: 'Price & pickup' },
-  { href: '#publish', label: 'Publish' },
+  { href: '#publish', label: 'Review' },
 ];
 
 const AUTOSAVE_DELAY_MS = 1600;
@@ -104,6 +106,8 @@ const DARK_FIELD_CLASS =
 export function ListingComposer({ sellerName, categories, initial }: ListingComposerProps) {
   const router = useRouter();
   const isPublished = initial?.status === 'published';
+  const [activeStep, setActiveStep] = useState(initial ? 1 : 0);
+  const stepHeadingRef = useRef<HTMLParagraphElement>(null);
   const [listingId, setListingId] = useState(initial?.id ?? null);
   const [images, setImages] = useState<ComposerImage[]>(initial?.images ?? []);
   const [notice, setNotice] = useState('');
@@ -166,6 +170,71 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
     }),
     [getValues],
   );
+
+  const goToStep = (step: number) => {
+    setActiveStep(step);
+    requestAnimationFrame(() => {
+      stepHeadingRef.current?.focus({ preventScroll: true });
+      stepHeadingRef.current?.scrollIntoView?.({
+        behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+          ? 'instant'
+          : 'smooth',
+        block: 'start',
+      });
+    });
+  };
+
+  const revealIssue = (field: PropertyKey | undefined) => {
+    setActiveStep(['priceCents', 'pickupArea', 'price'].includes(String(field)) ? 2 : 1);
+    requestAnimationFrame(() => focusFirstIssue(field));
+  };
+
+  const continueStep = () => {
+    clearErrors();
+    if (activeStep === 0) {
+      if (
+        !images.some((image) => image.status === 'uploaded') ||
+        hasFailedImages ||
+        hasUploadingImages
+      ) {
+        setNoticeKind('error');
+        setNotice(
+          hasUploadingImages
+            ? 'Let your photos finish uploading.'
+            : hasFailedImages
+              ? 'Retry or remove failed photos to continue.'
+              : 'Add at least one photo to continue.',
+        );
+        return;
+      }
+    } else if (activeStep < 3) {
+      const result = listingPublishSchema.safeParse({
+        ...toPayload(),
+        listingId: listingIdRef.current ?? '00000000-0000-4000-8000-000000000000',
+      });
+      if (!result.success) {
+        const fields =
+          activeStep === 1
+            ? ['title', 'description', 'categoryId', 'condition']
+            : ['priceCents', 'pickupArea'];
+        const issues = result.error.issues.filter((issue) =>
+          fields.includes(String(issue.path[0])),
+        );
+        if (issues.length) {
+          applyFieldErrors(
+            Object.fromEntries(issues.map((issue) => [String(issue.path[0]), issue.message])),
+            setError,
+          );
+          setNoticeKind('error');
+          setNotice('A few details still need your attention.');
+          revealIssue(issues[0].path[0]);
+          return;
+        }
+      }
+    }
+    setNotice('');
+    goToStep(Math.min(activeStep + 1, 3));
+  };
 
   const persistDraft = useCallback(() => {
     const rawPrice = getValues('price');
@@ -452,19 +521,19 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
           );
           setNoticeKind('error');
           setNotice('Your listing needs a few more details before publishing.');
-          focusFirstIssue(validation.error.issues[0]?.path[0]);
+          revealIssue(validation.error.issues[0]?.path[0]);
           return;
         }
         if (images.some((image) => image.status === 'failed')) {
           setNoticeKind('error');
           setNotice('Remove failed uploads before publishing your listing.');
-          document.getElementById('images')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          goToStep(0);
           return;
         }
         if (!images.some((image) => image.status === 'uploaded')) {
           setNoticeKind('error');
           setNotice('Please add at least one finished image before publishing.');
-          document.getElementById('images')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          goToStep(0);
           return;
         }
         if (images.some((image) => image.status === 'uploading')) {
@@ -527,13 +596,13 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
           : 'Not saved yet';
 
   return (
-    <div className="relative bg-um-ink-950 pb-44 text-um-text-inverse lg:pb-24">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-48 -top-64 size-[48rem] rounded-full bg-um-gold-400/[0.065] blur-[120px]" />
-      </div>
-      <header className="relative mx-auto max-w-um-content overflow-hidden px-5 pb-10 pt-10 text-um-text-inverse sm:px-8 sm:pb-12 sm:pt-14 lg:px-10 lg:pb-14 lg:pt-16">
-        <GoldBands />
-        <div className="relative z-10 max-w-3xl">
+    <div className="um-sell-workspace relative pb-44 text-um-text-inverse lg:pb-24">
+      <header className="relative mx-auto max-w-um-content overflow-hidden px-4 pb-7 pt-8 text-um-text-inverse sm:px-6 sm:pb-9 sm:pt-11 lg:px-8">
+        <div
+          aria-hidden="true"
+          className="absolute -right-24 -top-40 size-[30rem] rounded-full bg-[radial-gradient(circle,rgba(38,82,137,0.16),transparent_68%)] blur-2xl"
+        />
+        <div className="um-campus-signal relative z-10 max-w-3xl pl-4 sm:pl-5">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <p className="font-condensed text-xs font-semibold uppercase tracking-[0.16em] text-um-gold-400">
               {isPublished ? 'Edit listing' : 'Create a listing'}
@@ -541,55 +610,91 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
             <span aria-hidden="true" className="h-px w-8 bg-um-gold-600" />
             <p className="text-xs font-medium text-white/[0.55]">{saveState}</p>
           </div>
-          <h1 className="mt-4 break-words pb-1 text-[clamp(2.65rem,6vw,4.4rem)] font-bold leading-[1.08] tracking-[-0.026em] text-white">
-            {isPublished ? 'Keep it current.' : 'Pass it on.'}
+          <h1 className="mt-2 break-words pb-1 text-[clamp(2.15rem,4.5vw,3.7rem)] font-bold leading-[1.05] tracking-[-0.045em] text-white">
+            {isPublished ? (
+              'Keep your find current.'
+            ) : (
+              <>
+                Your next good deed.
+                <br />
+                <span className="font-serif font-normal italic text-um-gold-300">Pass it on.</span>
+              </>
+            )}
           </h1>
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/50">
+            A few photos, a little detail, and a new home for something good. Your draft stays
+            private until you publish.
+          </p>
         </div>
       </header>
 
       <nav
         aria-label="Listing sections"
-        className="relative mx-auto max-w-um-content overflow-x-auto border-y border-white/[0.09] px-4 [scrollbar-width:none] sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden"
+        className="relative mx-auto max-w-um-content overflow-x-auto px-4 [scrollbar-width:none] sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden"
       >
-        <ol className="flex min-w-max items-center">
+        <ol className="um-sell-steps">
           {STEPS.map((step, index) => (
-            <li className="flex items-center" key={step.href}>
-              <a
-                className="group inline-flex min-h-14 items-center px-3 text-xs font-semibold text-white/55 transition-colors duration-160 ease-um-out hover:text-white sm:px-5 sm:text-sm"
-                href={step.href}
+            <li key={step.href}>
+              <button
+                type="button"
+                aria-current={activeStep === index ? 'step' : undefined}
+                onClick={() => goToStep(index)}
               >
+                <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
                 {step.label}
-              </a>
-              {index < STEPS.length - 1 ? (
-                <span aria-hidden="true" className="h-px w-7 bg-white/[0.12] sm:w-12" />
-              ) : null}
+              </button>
             </li>
           ))}
         </ol>
       </nav>
 
-      <div className="relative mx-auto mt-8 grid max-w-um-content items-start gap-7 px-3 sm:px-6 lg:grid-cols-[minmax(0,1.72fr)_minmax(18.5rem,0.82fr)] lg:px-8 xl:gap-10">
+      <div className="relative mx-auto mt-6 grid max-w-um-content items-start gap-7 px-3 sm:px-6 lg:grid-cols-[minmax(0,1.72fr)_minmax(18.5rem,0.82fr)] lg:px-8 xl:gap-10">
         <form
-          className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-um-ink-900 px-5 py-8 text-um-text-strong shadow-[0_28px_80px_rgba(0,0,0,0.34)] sm:px-8 sm:py-10 lg:px-10"
+          className="min-w-0 space-y-5 text-um-text-strong sm:space-y-6"
           onSubmit={(event) => event.preventDefault()}
         >
-          <ImageUploader
-            ensureDraft={persistDraft}
-            initialImages={initial?.images}
-            listingId={listingId}
-            onImagesChange={setImages}
-          />
+          <div className="um-step-summary">
+            <p ref={stepHeadingRef} tabIndex={-1} className="scroll-mt-28 outline-none">
+              Step {activeStep + 1} of 4 <span>— {STEPS[activeStep].label}</span>
+            </p>
+            <button
+              type="button"
+              onClick={saveDraft}
+              disabled={isSaving}
+              className="inline-flex items-center gap-2 text-xs text-white/65 hover:text-white disabled:opacity-40"
+            >
+              <Save size={14} aria-hidden="true" />
+              {isPublished ? 'Save changes' : 'Save draft'}
+            </button>
+          </div>
+          <div hidden={activeStep !== 0} data-sell-step>
+            <ImageUploader
+              ensureDraft={persistDraft}
+              initialImages={initial?.images}
+              listingId={listingId}
+              onImagesChange={setImages}
+            />
+            <div className="um-photo-tips">
+              <p>
+                <strong>Let it shine.</strong> Natural light makes all the difference.
+              </p>
+              <p>
+                <strong>Show the whole story.</strong> Add a close-up of any wear.
+              </p>
+              <p>
+                <strong>Best photo first.</strong> Drag your favourite to the front.
+              </p>
+            </div>
+          </div>
 
           <section
+            hidden={activeStep !== 1}
+            data-sell-step
             aria-labelledby="details-heading"
-            className="scroll-mt-32 border-t border-white/[0.09] py-12 sm:py-14"
+            className="um-sell-section scroll-mt-32 rounded-[1.35rem] px-5 py-8 sm:rounded-[1.65rem] sm:px-8 sm:py-10 lg:px-10"
             id="details"
           >
-            <SectionHeading
-              eyebrow="Item details"
-              title="Tell students what they need to know"
-              id="details-heading"
-            />
+            <SectionHeading eyebrow="Item details" title="Describe the item" id="details-heading" />
 
             <div className="mt-9 space-y-9">
               <Field
@@ -654,7 +759,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
                     return (
                       <label
                         className={cn(
-                          'relative flex min-h-24 cursor-pointer flex-col justify-between overflow-hidden rounded-um-sm border p-3.5 transition duration-160 ease-um-out focus-within:ring-2 focus-within:ring-um-gold-400 focus-within:ring-offset-2 focus-within:ring-offset-um-ink-900',
+                          'relative flex min-h-16 cursor-pointer items-center gap-3 overflow-hidden rounded-[1rem] border px-3 py-3 transition duration-200 ease-um-out focus-within:ring-2 focus-within:ring-um-gold-400 focus-within:ring-offset-2 focus-within:ring-offset-um-ink-900',
                           selected
                             ? 'border-um-gold-400 bg-um-ink-800 text-white shadow-um-sm'
                             : 'border-white/[0.10] bg-um-ink-850 hover:border-white/[0.24] hover:bg-um-ink-800',
@@ -671,7 +776,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
                         />
                         <span
                           className={cn(
-                            'grid size-8 place-items-center',
+                            'grid size-9 shrink-0 place-items-center rounded-full',
                             selected
                               ? 'bg-um-gold-400 text-um-ink-950'
                               : 'bg-white/[0.08] text-um-text-muted',
@@ -681,7 +786,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
                         </span>
                         <span
                           className={cn(
-                            'mt-3 pr-4 text-sm font-bold leading-5',
+                            'pr-3 text-sm font-bold leading-5',
                             selected ? 'text-white' : 'text-um-text-strong',
                           )}
                         >
@@ -755,48 +860,48 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
           </section>
 
           <section
+            hidden={activeStep !== 2}
+            data-sell-step
             aria-labelledby="pricing-heading"
-            className="scroll-mt-32 border-t border-white/[0.09] py-12 sm:py-14"
+            className="um-sell-section scroll-mt-32 rounded-[1.35rem] px-5 py-8 sm:rounded-[1.65rem] sm:px-8 sm:py-10 lg:px-10"
             id="pricing"
           >
             <SectionHeading
               eyebrow="Price & pickup"
               id="pricing-heading"
-              title="Make the exchange easy"
+              title="Set the exchange"
             />
 
-            <div className="mt-9 grid gap-8 sm:grid-cols-2">
-              <Field error={errors.price?.message} helper="0 = free" label="Price">
-                <div className="relative">
-                  <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-bold text-um-text-muted">
-                    $
-                  </span>
-                  <Input
-                    {...register('price')}
-                    aria-describedby="price-help"
-                    aria-invalid={Boolean(errors.price)}
-                    className={cn(
-                      'h-[3.25rem] rounded-um-sm pl-8 pr-16 text-lg font-bold shadow-um-xs',
-                      DARK_FIELD_CLASS,
-                    )}
-                    id="price"
-                    inputMode="decimal"
-                    placeholder="120"
-                  />
-                  <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center font-condensed text-xs font-semibold uppercase tracking-[0.1em] text-um-text-muted">
-                    CAD
-                  </span>
+            <div className="mt-9 grid gap-6">
+              <div className="overflow-hidden rounded-[1.15rem] border border-white/[0.12] bg-[#0c1521] shadow-[inset_0_1px_0_rgba(255,255,255,0.035)] sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch">
+                <div className="p-4 sm:p-5">
+                  <Field error={errors.price?.message} helper="0 = free" label="Price">
+                    <div className="relative">
+                      <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-bold text-um-text-muted">
+                        $
+                      </span>
+                      <Input
+                        {...register('price')}
+                        aria-describedby="price-help"
+                        aria-invalid={Boolean(errors.price)}
+                        className={cn(
+                          'h-[3.25rem] rounded-[0.8rem] border-white/[0.1] !bg-white/[0.035] pl-8 pr-16 text-lg font-bold shadow-none',
+                          DARK_FIELD_CLASS,
+                        )}
+                        id="price"
+                        inputMode="decimal"
+                        placeholder="120"
+                      />
+                      <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center font-condensed text-xs font-semibold uppercase tracking-[0.1em] text-um-text-muted">
+                        CAD
+                      </span>
+                    </div>
+                  </Field>
                 </div>
-              </Field>
-
-              <div>
-                <Label
-                  className="mb-2.5 block font-bold text-um-text-strong"
-                  htmlFor="open-to-offers"
-                >
-                  Open to offers
-                </Label>
-                <div className="flex h-[3.25rem] items-center justify-end rounded-um-sm border border-white/[0.14] bg-[#111a26] px-4 shadow-um-xs">
+                <div className="flex min-h-20 items-center justify-between gap-6 border-t border-white/[0.08] px-4 sm:min-w-52 sm:border-l sm:border-t-0 sm:px-5">
+                  <Label className="font-bold text-um-text-strong" htmlFor="open-to-offers">
+                    Open to offers
+                  </Label>
                   <Switch.Root
                     aria-label="Open to offers"
                     checked={values.openToOffers}
@@ -811,7 +916,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div>
                 <Field
                   error={errors.pickupArea?.message}
                   htmlFor="pickupArea"
@@ -836,26 +941,66 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
             </div>
           </section>
 
-          <section
-            className="scroll-mt-32 border-t border-white/[0.09] pt-12 sm:pt-14"
-            id="publish"
-          >
-            <div className="relative overflow-hidden rounded-um-md bg-um-ink-950 p-5 text-white shadow-um-md sm:p-7">
-              <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-um-gold-400" />
-              <div className="flex items-start gap-3.5">
-                <span className="grid size-10 shrink-0 place-items-center bg-white/[0.08] text-um-gold-400">
-                  <ShieldCheck aria-hidden="true" className="size-5" strokeWidth={1.9} />
-                </span>
-                <div>
-                  <p className="font-condensed text-[0.68rem] font-bold uppercase tracking-[0.16em] text-um-gold-400">
-                    Publish
-                  </p>
-                  <h2 className="mt-1.5 text-xl font-bold tracking-[-0.025em] text-white">
-                    Listed for Waterloo.
-                  </h2>
-                </div>
+          <section hidden={activeStep !== 3} data-sell-step className="scroll-mt-32" id="publish">
+            <div className="relative overflow-hidden rounded-[1.35rem] border border-um-gold-300/15 bg-[linear-gradient(135deg,rgba(35,30,16,0.88),rgba(9,15,24,0.94)_55%)] p-5 text-white shadow-[0_24px_64px_rgba(0,0,0,0.24)] sm:rounded-[1.65rem] sm:p-7">
+              <div className="flex items-center gap-3">
+                <ShieldCheck
+                  aria-hidden="true"
+                  className="size-5 text-um-gold-300"
+                  strokeWidth={1.8}
+                />
+                <h2 className="text-lg font-bold tracking-[-0.025em] text-white">One last look.</h2>
               </div>
 
+              <p className="mt-3 text-sm leading-relaxed text-white/55">
+                Check the details your Waterloo people will see. You can always come back and make
+                changes.
+              </p>
+              <dl className="um-review-details">
+                <div>
+                  <dt>Photos</dt>
+                  <dd>
+                    {images.filter((image) => image.status === 'uploaded').length} ready{' '}
+                    <button type="button" onClick={() => goToStep(0)}>
+                      Edit
+                    </button>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Item</dt>
+                  <dd>
+                    {values.title || 'Add a title'}{' '}
+                    <button type="button" onClick={() => goToStep(1)}>
+                      Edit
+                    </button>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Category · condition</dt>
+                  <dd>
+                    {selectedCategory?.name ?? 'Choose a category'} ·{' '}
+                    {selectedCondition?.label ?? 'Choose condition'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Price</dt>
+                  <dd>
+                    {displayPrice === null
+                      ? 'Add a price'
+                      : displayPrice === 0
+                        ? 'Free'
+                        : `$${(displayPrice / 100).toFixed(2)} CAD`}
+                    {values.openToOffers ? ' · Open to offers' : ''}{' '}
+                    <button type="button" onClick={() => goToStep(2)}>
+                      Edit
+                    </button>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Pickup</dt>
+                  <dd>{values.pickupArea || 'Add a pickup address'}</dd>
+                </div>
+              </dl>
               <p
                 aria-live="polite"
                 className={cn(
@@ -909,6 +1054,27 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
               </div>
             </div>
           </section>
+          <div className="um-step-footer">
+            <button
+              type="button"
+              onClick={() => goToStep(activeStep - 1)}
+              disabled={activeStep === 0}
+              className="inline-flex min-h-11 items-center gap-2 text-sm text-white/65 disabled:invisible"
+            >
+              <ArrowLeft size={16} aria-hidden="true" /> Back
+            </button>
+            {activeStep < 3 && (
+              <Button
+                type="button"
+                onClick={continueStep}
+                variant="gold"
+                className="rounded-full px-6"
+              >
+                {activeStep === 2 ? 'Review listing' : 'Continue'}
+                <ArrowRight size={16} aria-hidden="true" />
+              </Button>
+            )}
+          </div>
         </form>
 
         <aside
@@ -1034,7 +1200,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
             <Button
               className="h-11 flex-1 bg-um-gold-500 px-4 text-um-ink-950 shadow-um-xs hover:bg-um-gold-400"
               disabled={isSaving || hasUploadingImages}
-              onClick={publish}
+              onClick={activeStep < 3 ? continueStep : publish}
               type="button"
               variant="gold"
             >
@@ -1043,13 +1209,17 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
               ) : (
                 <Sparkles aria-hidden="true" className="size-4" />
               )}
-              {hasUploadingImages
-                ? 'Uploading photos'
-                : pendingAction === 'publish'
-                  ? 'Publishing…'
-                  : isPublished
-                    ? 'Update listing'
-                    : 'Publish listing'}
+              {activeStep < 3
+                ? activeStep === 2
+                  ? 'Review listing'
+                  : 'Continue'
+                : hasUploadingImages
+                  ? 'Uploading photos'
+                  : pendingAction === 'publish'
+                    ? 'Publishing…'
+                    : isPublished
+                      ? 'Update listing'
+                      : 'Publish listing'}
             </Button>
           </div>
         </div>
@@ -1058,28 +1228,14 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
   );
 }
 
-function GoldBands() {
-  return (
-    <div
-      aria-hidden="true"
-      className="absolute -right-8 top-1/2 hidden w-[34%] -translate-y-1/2 rotate-[-7deg] space-y-2 opacity-65 sm:block"
-    >
-      <div className="ml-auto h-2.5 w-[72%] bg-um-gold-300" />
-      <div className="ml-auto h-2.5 w-[88%] bg-um-gold-400" />
-      <div className="ml-auto h-2.5 w-full bg-um-gold-500" />
-      <div className="ml-auto h-2.5 w-[58%] bg-um-gold-600" />
-    </div>
-  );
-}
-
 function SectionHeading({ eyebrow, title, id }: { eyebrow: string; title: string; id: string }) {
   return (
-    <div className="border-l-2 border-um-gold-500 pl-4">
-      <p className="font-condensed text-xs font-bold uppercase tracking-[0.15em] text-um-gold-700">
+    <div>
+      <p className="font-condensed text-[0.68rem] font-bold uppercase tracking-[0.17em] text-um-gold-300/78">
         {eyebrow}
       </p>
       <h2
-        className="mt-1.5 break-words pb-0.5 text-2xl font-bold leading-tight tracking-[-0.035em] text-um-text-strong"
+        className="mt-2 break-words pb-0.5 text-[clamp(1.65rem,3vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.045em] text-um-text-strong"
         id={id}
       >
         {title}
@@ -1143,12 +1299,12 @@ function ListingPreviewCard({
   values: FormValues;
 }) {
   return (
-    <div className="overflow-hidden rounded-um-md border border-white/[0.08] bg-um-ink-850 text-white shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-um-ink-800">
+    <div className="um-listing-card overflow-hidden rounded-[1.35rem] p-2 text-white shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-um-ink-800">
         {coverImage ? (
           <Image
             alt={values.title ? `${values.title} cover preview` : 'Listing cover preview'}
-            className="object-cover"
+            className="object-contain object-center"
             fill
             src={coverImage}
             unoptimized
@@ -1170,7 +1326,7 @@ function ListingPreviewCard({
         <WaterlooVerificationBadge className="absolute left-3 top-3 bg-um-ink-950/90 shadow-um-xs backdrop-blur-sm" />
       </div>
 
-      <div className="p-5">
+      <div className="px-3 pb-3 pt-5">
         <p className="font-condensed text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-um-gold-400">
           {selectedCategory?.name || 'Category'}
         </p>
@@ -1287,7 +1443,7 @@ function focusFirstIssue(field: PropertyKey | undefined) {
   const scrollTarget = isRadioGroup ? document.getElementById(`${formField}-group`) : control;
 
   control?.focus({ preventScroll: true });
-  scrollTarget?.scrollIntoView({
+  scrollTarget?.scrollIntoView?.({
     behavior: 'smooth',
     block: 'center',
   });

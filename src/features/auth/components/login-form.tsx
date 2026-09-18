@@ -131,7 +131,7 @@ export function LoginForm({ nextPath }: LoginFormProps) {
       </button>
 
       <p className="flex flex-wrap items-center justify-center gap-x-1.5 text-center text-sm text-um-text-muted">
-        <span>New to UniMarket?</span>
+        <span>New to Trovun?</span>
         <Link
           className="inline-flex min-h-11 items-center font-bold leading-5 text-um-text-strong underline decoration-um-gold-500 decoration-2 underline-offset-4 transition hover:text-um-gold-200 hover:decoration-um-gold-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-500"
           href={signupHref}

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ArrowRight, BadgeCheck, BookOpen, MapPin, Search } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import Link from 'next/link';
 
 import { JsonLd } from '@/features/seo/components/JsonLd';
@@ -14,7 +14,7 @@ import { absoluteUrl, SITE_URL } from '@/lib/site';
 
 const title = 'University of Waterloo Student Marketplace';
 const description =
-  'Explore UniMarket Waterloo for used textbooks, electronics, clothing, and household essentials from verified University of Waterloo students.';
+  'Explore Trovun Waterloo for used textbooks, electronics, clothing, and household essentials from verified University of Waterloo students.';
 
 export const metadata: Metadata = {
   title,
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     canonical: '/waterloo-marketplace',
   },
   openGraph: {
-    title: `${title} | UniMarket`,
+    title: `${title} | Trovun`,
     description,
     url: '/waterloo-marketplace',
   },
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
 
 const faqItems = [
   {
-    question: 'What is UniMarket Waterloo?',
+    question: 'What is Trovun Waterloo?',
     answer:
-      'UniMarket is an independent student-built marketplace for the University of Waterloo community. Verified students can browse, list, and message inside the private marketplace.',
+      'Trovun, formerly UniMarket, is an independent student-built marketplace for the University of Waterloo community. Verified students can browse, list, and message inside the private marketplace.',
   },
   {
     question: 'What can students search for?',
@@ -41,9 +41,9 @@ const faqItems = [
       'Common searches include used textbooks, monitors, calculators, laptops, desks, chairs, kitchenware, winter jackets, and co-op clothing.',
   },
   {
-    question: 'Is UniMarket affiliated with the University of Waterloo?',
+    question: 'Is Trovun affiliated with the University of Waterloo?',
     answer:
-      'No. UniMarket is an independent project and is not affiliated with or endorsed by the University of Waterloo.',
+      'No. Trovun is an independent project and is not affiliated with or endorsed by the University of Waterloo.',
   },
 ] as const;
 
@@ -104,7 +104,7 @@ export default function WaterlooMarketplacePage() {
               {
                 '@type': 'ListItem',
                 position: 1,
-                name: 'UniMarket',
+                name: 'Trovun',
                 item: SITE_URL,
               },
               {

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import {
@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'My listings',
-  description: 'Manage your UniMarket drafts and published listings.',
+  description: 'Manage your Trovun drafts and published listings.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -47,23 +47,19 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 export default async function MyListingsPage() {
   const viewer = await requireStudentSeller('/my-listings');
   const listings = await getManagedListings(viewer.id);
-  const counts = Object.fromEntries(
-    GROUPS.map((group) => [
-      group.status,
-      listings.filter((listing) => listing.status === group.status).length,
-    ]),
-  ) as Record<ManagedListing['status'], number>;
-
+  const availableGroups = GROUPS.filter((group) =>
+    listings.some((listing) => listing.status === group.status),
+  );
   return (
-    <div className="min-h-[calc(100vh-4.35rem)] bg-[#080c13] pb-24 text-um-text-strong lg:pb-28">
-      <header className="border-b border-white/[0.075] bg-[radial-gradient(circle_at_84%_12%,rgba(231,188,53,0.08),transparent_26rem)]">
-        <div className="mx-auto flex max-w-um-content flex-col gap-6 px-4 py-9 sm:flex-row sm:items-end sm:justify-between sm:px-6 sm:py-11 lg:px-8">
-          <div>
-            <p className="font-condensed text-[0.66rem] font-bold uppercase tracking-[0.19em] text-um-gold-300/78">
-              Seller workspace
+    <div className="min-h-[calc(100vh-4rem)] pb-24 text-um-text-strong lg:pb-24">
+      <header className="border-b border-white/[0.07]">
+        <div className="mx-auto flex max-w-um-content items-center justify-between gap-5 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="um-campus-signal pl-4 sm:pl-5">
+            <p className="text-[0.61rem] font-bold uppercase tracking-[0.17em] text-um-gold-300/78">
+              Seller space
             </p>
-            <h1 className="mt-2 text-[clamp(2.55rem,5vw,4.35rem)] font-bold leading-[0.96] tracking-[-0.052em] text-[#f0ece4]">
-              Your listings.
+            <h1 className="mt-1.5 text-[clamp(2rem,4vw,3.25rem)] font-bold leading-[1] tracking-[-0.045em] text-[#f0ece4]">
+              Your listings
             </h1>
           </div>
 
@@ -78,24 +74,27 @@ export default async function MyListingsPage() {
       </header>
 
       <div className="mx-auto max-w-um-content px-4 sm:px-6 lg:px-8">
-        <section
-          aria-label="Listing totals"
-          className="grid grid-cols-2 border-b border-white/[0.075] sm:grid-cols-4"
-        >
-          {GROUPS.map((group, index) => (
-            <StatusSummary
-              count={counts[group.status]}
-              group={group}
-              index={index}
-              key={group.status}
-            />
-          ))}
-        </section>
+        {availableGroups.length > 0 ? (
+          <nav
+            aria-label="Listing status"
+            className="flex gap-1 overflow-x-auto border-b border-white/[0.07] py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {availableGroups.map((group) => (
+              <a
+                className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-white/48 transition hover:bg-white/[0.05] hover:text-white"
+                href={`#${group.status}-heading`}
+                key={group.status}
+              >
+                {group.label}
+              </a>
+            ))}
+          </nav>
+        ) : null}
 
         {listings.length === 0 ? (
           <EmptyListings />
         ) : (
-          <div className="space-y-14 pt-10 sm:space-y-16 sm:pt-12 lg:space-y-20">
+          <div className="space-y-12 pt-8 sm:space-y-14 sm:pt-10 lg:space-y-16">
             {GROUPS.map((group) => {
               const groupListings = listings.filter((listing) => listing.status === group.status);
               if (groupListings.length === 0) return null;
@@ -103,7 +102,7 @@ export default async function MyListingsPage() {
               const Icon = group.icon;
               return (
                 <section aria-labelledby={`${group.status}-heading`} key={group.status}>
-                  <div className="mb-5 flex items-center gap-5 border-b border-white/[0.075] pb-4">
+                  <div className="mb-5 flex items-center gap-5">
                     <div className="flex items-center gap-2.5">
                       <Icon
                         aria-hidden="true"
@@ -119,7 +118,7 @@ export default async function MyListingsPage() {
                     </div>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-5">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-5">
                     {groupListings.map((listing) => (
                       <ManagedListingCard key={listing.id} listing={listing} />
                     ))}
@@ -134,46 +133,6 @@ export default async function MyListingsPage() {
   );
 }
 
-function StatusSummary({
-  count,
-  group,
-  index,
-}: {
-  count: number;
-  group: (typeof GROUPS)[number];
-  index: number;
-}) {
-  const Icon = group.icon;
-  const content = (
-    <>
-      <Icon aria-hidden="true" className="size-4 text-white/28" strokeWidth={1.8} />
-      <span>
-        <strong className="block text-xl font-bold tabular-nums tracking-[-0.04em] text-[#f0ece4] sm:text-2xl">
-          {count}
-        </strong>
-        <span className="font-condensed mt-0.5 block text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/38">
-          {group.label}
-        </span>
-      </span>
-    </>
-  );
-  const className = cn(
-    'flex min-h-[5.3rem] items-center gap-3 py-4 transition-colors duration-220 ease-um-out sm:min-h-[5.75rem]',
-    index % 2 !== 0 && 'border-l border-white/[0.075] pl-4 sm:pl-6',
-    index > 1 && 'border-t border-white/[0.075] sm:border-t-0',
-    index === 2 && 'sm:border-l sm:pl-6',
-    count > 0 && 'hover:bg-white/[0.025]',
-  );
-
-  return count > 0 ? (
-    <a className={className} href={`#${group.status}-heading`}>
-      {content}
-    </a>
-  ) : (
-    <div className={className}>{content}</div>
-  );
-}
-
 function ManagedListingCard({ listing }: { listing: ManagedListing }) {
   const title = listing.title.trim() || 'Untitled draft';
   const CategoryIcon = listing.category
@@ -181,7 +140,7 @@ function ManagedListingCard({ listing }: { listing: ManagedListing }) {
     : Shapes;
 
   return (
-    <article className="group min-w-0 overflow-hidden rounded-[1.05rem] border border-white/[0.075] bg-[#0d131d] shadow-[0_16px_42px_rgba(0,0,0,0.14)] transition-[border-color,box-shadow,transform] duration-220 ease-um-out hover:-translate-y-0.5 hover:border-white/[0.13] hover:shadow-[0_22px_54px_rgba(0,0,0,0.22)]">
+    <article className="group min-w-0 overflow-hidden rounded-[0.9rem] border border-white/[0.08] bg-[#0b121c]/86 shadow-[0_16px_42px_rgba(0,0,0,0.14)] transition-[border-color,box-shadow,transform] duration-220 ease-um-out hover:-translate-y-0.5 hover:border-white/[0.15] hover:shadow-[0_22px_54px_rgba(0,0,0,0.22)]">
       <div className="relative aspect-[5/4] overflow-hidden bg-[#131b27]">
         {listing.coverUrl ? (
           <Image
@@ -216,9 +175,9 @@ function ManagedListingCard({ listing }: { listing: ManagedListing }) {
         </span>
       </div>
 
-      <div className="p-4 sm:p-5">
+      <div className="p-3 sm:p-4">
         <div className="flex items-start justify-between gap-4">
-          <h3 className="line-clamp-2 min-w-0 text-[1.02rem] font-bold leading-6 tracking-[-0.025em] text-[#f0ece4]">
+          <h3 className="line-clamp-2 min-w-0 text-[0.9rem] font-bold leading-5 tracking-[-0.02em] text-[#f0ece4] sm:text-[1rem] sm:leading-6">
             {title}
           </h3>
           <p className="shrink-0 text-sm font-bold tabular-nums text-[#f0ece4]">

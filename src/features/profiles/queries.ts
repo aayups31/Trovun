@@ -58,7 +58,32 @@ export const getPublicStudentProfile = cache(async function getPublicStudentProf
   ]);
 
   if (profileError) throw new ProfileDataError();
-  if (!profile) return null;
+  if (!profile) {
+    // Buyers may have no published listings. The participant-only inbox still
+    // permits showing the same safe identity the viewer can see in their chat.
+    const { data: counterpart, error: counterpartError } = await supabase
+      .from('inbox_conversations')
+      .select('counterpart_id,counterpart_name')
+      .eq('counterpart_id', studentId)
+      .limit(1)
+      .maybeSingle();
+    if (counterpartError) throw new ProfileDataError();
+    if (!counterpart) return null;
+    return {
+      id: studentId,
+      name: counterpart.counterpart_name,
+      avatarUrl: null,
+      hasAvatar: false,
+      email: null,
+      program: null,
+      academicYear: null,
+      university: 'University of Waterloo',
+      joinedAt: null,
+      verified: false,
+      role: 'student',
+      listings,
+    };
+  }
 
   const row = profile as PublicProfileRow;
   const avatarUrl = await signProfileAvatar(supabase, row.avatar_path);
@@ -89,7 +114,7 @@ export async function getOwnProfileSurface(viewer: Viewer): Promise<StudentProfi
     id: viewer.id,
     name:
       viewer.profile.full_name?.trim() ||
-      (viewer.profile.role === 'moderator' ? 'UniMarket moderator' : 'Waterloo student'),
+      (viewer.profile.role === 'moderator' ? 'Trovun moderator' : 'Waterloo student'),
     avatarUrl,
     hasAvatar: Boolean(viewer.profile.avatar_path),
     email: viewer.email,

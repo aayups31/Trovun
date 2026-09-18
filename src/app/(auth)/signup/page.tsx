@@ -6,8 +6,8 @@ import { getSafeNextPath } from '@/lib/auth/navigation';
 import { getCurrentIdentity, getViewer } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Join UniMarket',
-  description: 'Create a verified Waterloo student account for UniMarket.',
+  title: 'Join Trovun',
+  description: 'Create a verified Waterloo student account for Trovun.',
 };
 
 type SignupPageProps = {

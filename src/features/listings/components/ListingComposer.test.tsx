@@ -253,16 +253,19 @@ describe('ListingComposer listing actions', () => {
     const user = userEvent.setup();
     renderComposer();
 
+    await user.click(screen.getAllByRole('button', { name: 'Continue' })[0]);
     await user.type(screen.getByLabelText('Title'), 'Calculus textbook');
     await user.type(
       screen.getByLabelText('Description'),
       'Clean copy with no missing pages and only a few pencil notes.',
     );
-    await user.type(screen.getByLabelText('Price'), '35');
     await user.click(screen.getByRole('radio', { name: 'Books' }));
     await user.click(screen.getByRole('radio', { name: 'Good' }));
+    await user.click(screen.getAllByRole('button', { name: 'Continue' })[0]);
+    await user.type(screen.getByLabelText('Price'), '35');
     await user.type(screen.getByLabelText('Pickup address'), '200 University Ave W');
 
+    await user.click(screen.getAllByRole('button', { name: 'Review listing' })[0]);
     await user.click(screen.getAllByRole('button', { name: 'Publish listing' })[0]);
 
     await waitFor(() => expect(mocks.publishListingAction).toHaveBeenCalledTimes(1));

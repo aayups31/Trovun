@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 
 import { BrandMark } from '@/components/BrandMark';
 import { cn } from '@/lib/utils';
@@ -97,7 +97,7 @@ export function WaterlooCampaignPanel({
           {CAMPUS_PLACES.join(' · ')}
         </p>
         <p className="mt-3 max-w-md text-xs leading-5 text-white/48">
-          UniMarket is independent and not an official University of Waterloo service.
+          Trovun is independent and not an official University of Waterloo service.
         </p>
       </div>
       <GoldBands />
@@ -194,7 +194,7 @@ function WarriorsAuthPanel({
             {CAMPUS_PLACES.join(' · ')}
           </p>
           <p className="mt-3 max-w-md text-[0.68rem] leading-5 text-white/38">
-            UniMarket is independent and not an official University of Waterloo service.
+            Trovun is independent and not an official University of Waterloo service.
           </p>
         </div>
         <p className="hidden font-mono text-[0.58rem] uppercase tracking-[0.18em] text-white/28 xl:block">

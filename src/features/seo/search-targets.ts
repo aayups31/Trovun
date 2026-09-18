@@ -29,7 +29,7 @@ export const SEARCH_CATEGORIES: readonly SearchCategory[] = [
       'Used electronics for Waterloo classes, study setups, gaming, and the next co-op term.',
     introduction:
       'Find the practical tech students use every day: monitors for a residence desk, calculators for class, chargers that went missing during a move, and complete work-from-home setups.',
-    image: '/waterloo/category-electronics-still-life-v2.webp',
+    image: '/waterloo/category-electronics-photo-v3.webp',
     imagePosition: '62% 54%',
     checklist: [
       'Test power, ports, speakers, cameras, and batteries before exchanging.',
@@ -45,7 +45,7 @@ export const SEARCH_CATEGORIES: readonly SearchCategory[] = [
       'Used textbooks, course readers, lab manuals, and books passed between Waterloo terms.',
     introduction:
       'Search by course, title, author, or subject to find books already close to campus. Edition and access-code details matter, so confirm both with the seller before meeting.',
-    image: '/waterloo/category-books-still-life-v2.webp',
+    image: '/waterloo/category-books-photo-v3.webp',
     imagePosition: '56% 57%',
     checklist: [
       'Match the ISBN and edition to the course outline before buying.',
@@ -60,7 +60,7 @@ export const SEARCH_CATEGORIES: readonly SearchCategory[] = [
     description: 'Furniture, kitchenware, storage, and apartment essentials near Waterloo campus.',
     introduction:
       'Furnish a student room without moving everything across the province. Find compact desks, chairs, lamps, kitchen basics, storage, and appliances suited to Waterloo student housing.',
-    image: '/waterloo/category-household-still-life-v2.webp',
+    image: '/waterloo/category-household-photo-v3.webp',
     imagePosition: '61% 52%',
     checklist: [
       'Confirm dimensions before arranging pickup, especially for residences and elevators.',
@@ -76,7 +76,7 @@ export const SEARCH_CATEGORIES: readonly SearchCategory[] = [
       'Waterloo layers, co-op clothing, shoes, and accessories with another term left in them.',
     introduction:
       'Shop for winter layers, interview clothing, everyday campus wear, and accessories from people nearby. Confirm the tagged size and ask for measurements when fit matters.',
-    image: '/waterloo/category-clothing-still-life-v2.webp',
+    image: '/waterloo/category-clothing-photo-v3.webp',
     imagePosition: '54% 50%',
     checklist: [
       'Confirm tagged size, measurements, condition, and material with the seller.',

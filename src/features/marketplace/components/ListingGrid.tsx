@@ -9,7 +9,7 @@ type ListingGridProps = {
 
 export function ListingGrid({ listings, prioritizeFirst = false }: ListingGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-x-3.5 gap-y-9 min-[500px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-4 xl:gap-y-11">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4 xl:gap-6">
       {listings.map((listing, index) => (
         <ListingCard key={listing.id} listing={listing} priority={prioritizeFirst && index < 2} />
       ))}

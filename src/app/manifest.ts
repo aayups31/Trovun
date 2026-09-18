@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'UniMarket Waterloo',
-    short_name: 'UniMarket',
+    name: 'Trovun Waterloo',
+    short_name: 'Trovun',
     description: 'A private student marketplace for the University of Waterloo community.',
     start_url: '/',
     display: 'standalone',

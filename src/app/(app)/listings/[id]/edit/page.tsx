@@ -10,7 +10,7 @@ import { requireStudentSeller } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Edit listing',
-  description: 'Update a UniMarket listing.',
+  description: 'Update a Trovun listing.',
 };
 
 export const dynamic = 'force-dynamic';

@@ -1,25 +1,30 @@
 import type { Metadata } from 'next';
+import { connection } from 'next/server';
 
 import { App as MarketingPage } from '@/App';
+import { getPublicListingShowcase } from '@/features/marketplace/public-showcase';
 import { JsonLd } from '@/features/seo/components/JsonLd';
 import { absoluteUrl, SITE_DESCRIPTION, SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'UniMarket Waterloo | University Marketplace for Students',
+    absolute: 'Trovun Waterloo | University Marketplace for Students',
   },
   description: SITE_DESCRIPTION,
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'UniMarket Waterloo | University Marketplace for Students',
+    title: 'Trovun Waterloo | University Marketplace for Students',
     description: SITE_DESCRIPTION,
     url: '/',
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  await connection();
+  const showcaseListings = await getPublicListingShowcase();
+
   return (
     <>
       <JsonLd
@@ -29,8 +34,8 @@ export default function HomePage() {
             '@type': 'WebSite',
             '@id': `${SITE_URL}/#website`,
             url: SITE_URL,
-            name: 'UniMarket',
-            alternateName: ['UniMarket Waterloo', 'Waterloo student marketplace'],
+            name: 'Trovun',
+            alternateName: ['Trovun Waterloo', 'UniMarket'],
             description: SITE_DESCRIPTION,
             inLanguage: 'en-CA',
             publisher: {
@@ -41,12 +46,12 @@ export default function HomePage() {
             '@context': 'https://schema.org',
             '@type': 'Organization',
             '@id': `${SITE_URL}/#organization`,
-            name: 'UniMarket',
-            alternateName: 'UniMarket Waterloo',
+            name: 'Trovun',
+            alternateName: ['Trovun Waterloo', 'UniMarket'],
             url: SITE_URL,
             logo: {
               '@type': 'ImageObject',
-              url: absoluteUrl('/brand/unimarket-mark.png'),
+              url: absoluteUrl('/brand/trovun-mark.svg'),
               width: 1024,
               height: 1024,
             },
@@ -55,7 +60,7 @@ export default function HomePage() {
           },
         ]}
       />
-      <MarketingPage />
+      <MarketingPage showcaseListings={showcaseListings} />
     </>
   );
 }

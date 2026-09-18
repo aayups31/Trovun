@@ -29,7 +29,7 @@ describe('SignupForm', () => {
     await user.type(screen.getByLabelText('Waterloo email'), 'student@uwaterloo.ca');
     await user.type(screen.getByLabelText('Password'), 'Waterloo8');
     await user.type(screen.getByLabelText('Confirm password'), 'Waterloo8');
-    await user.click(screen.getByRole('button', { name: 'Join UniMarket' }));
+    await user.click(screen.getByRole('button', { name: 'Join Trovun' }));
 
     const accountNotice = await screen.findByRole('status');
     expect(within(accountNotice).getByText('Email already registered.')).toBeVisible();
@@ -62,7 +62,7 @@ describe('SignupForm', () => {
     await user.type(screen.getByLabelText('Waterloo email'), 'student@uwaterloo.ca');
     await user.type(screen.getByLabelText('Password', { exact: true }), 'Waterloo8');
     await user.type(screen.getByLabelText('Confirm password'), 'Waterloo8');
-    await user.click(screen.getByRole('button', { name: 'Join UniMarket' }));
+    await user.click(screen.getByRole('button', { name: 'Join Trovun' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent("We couldn't confirm the result");
     const resendButton = screen.getByRole('button', { name: 'Send new code' });

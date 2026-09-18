@@ -9,7 +9,7 @@ export type StudentProfileSurface = {
   program: string | null;
   academicYear: string | null;
   university: string;
-  joinedAt: string;
+  joinedAt: string | null;
   verified: boolean;
   role: 'student' | 'moderator';
   listings: MarketplaceListing[];

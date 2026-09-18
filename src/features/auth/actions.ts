@@ -41,7 +41,7 @@ type AuthEmailError = {
 
 function emailRequestErrorMessage(error?: AuthEmailError) {
   if (error?.code === 'email_address_not_authorized') {
-    return 'Email delivery is not enabled for this address. Please contact UniMarket support.';
+    return 'Email delivery is not enabled for this address. Please contact Trovun support.';
   }
 
   if (error?.code === 'over_email_send_rate_limit' || error?.status === 429) {
@@ -139,7 +139,7 @@ export async function loginAction(input: LoginInput): Promise<AuthActionResult> 
     verifiedEmail !== parsed.data.email
   ) {
     await supabase.auth.signOut({ scope: 'local' });
-    return { ok: false, message: 'Use an eligible UniMarket account to continue.' };
+    return { ok: false, message: 'Use an eligible Trovun account to continue.' };
   }
 
   const { data: profile, error: profileError } = await supabase

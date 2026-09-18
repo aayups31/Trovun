@@ -1,95 +1,43 @@
-import { BadgeCheck, CalendarRange, MapPin } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
+import type { PublicListingShowcaseItem } from '@/features/marketplace/public-showcase';
+import { MarketplaceScrollShowcase } from './MarketplaceScrollShowcase';
+import s from './Home.module.css';
 
-const principles = [
-  {
-    label: 'Waterloo ID',
-    detail: 'Verified @uwaterloo.ca access.',
-    icon: BadgeCheck,
-  },
-  {
-    label: 'Nearby',
-    detail: 'Pickup around places you know.',
-    icon: MapPin,
-  },
-  {
-    label: 'Term-aware',
-    detail: 'Built for classes, moves, and co-op.',
-    icon: CalendarRange,
-  },
-] as const;
-
-export function WhyBetter() {
+export function WhyBetter({ listings }: { listings: PublicListingShowcaseItem[] }) {
   return (
     <section
-      className="relative scroll-mt-24 overflow-hidden bg-transparent py-24 text-[#ece8df] sm:py-28 lg:py-36"
+      className={`${s.section} ${s.findsSection}`}
       id="why-waterloo"
+      aria-labelledby="finds-heading"
     >
-      <div className="relative mx-auto max-w-um-content px-4 sm:px-6 lg:px-8">
-        <header className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)] lg:items-end lg:gap-20">
+      <div className={s.wrap}>
+        <header className={s.sectionHeader} data-home-reveal>
           <div>
-            <p className="font-condensed text-xs font-bold uppercase tracking-[0.18em] text-um-gold-400">
-              Why Waterloo
-            </p>
-            <h2 className="um-balanced um-display-safe mt-5 max-w-5xl text-[clamp(2.7rem,5.8vw,5.75rem)] font-bold leading-[1.02] tracking-[-0.03em] sm:leading-[0.99]">
-              One campus changes
-              <span className="font-editorial block font-normal tracking-[-0.02em] text-um-gold-300">
-                the whole marketplace.
-              </span>
+            <p className={s.eyebrow}>From your people, for your next term</p>
+            <h2 className={s.heading} id="finds-heading">
+              New term.
+              <br />
+              <span className={s.serif}>Good finds.</span>
             </h2>
           </div>
-          <p className="max-w-md text-base leading-7 text-[#ddd6cb]/70 sm:text-lg sm:leading-8">
-            Verified access, familiar pickup, and a rhythm that already matches Waterloo life.
-          </p>
-        </header>
-
-        <figure className="group relative mt-14 h-[38rem] overflow-hidden rounded-[1.75rem] border border-white/[0.1] bg-um-ink-900 shadow-[0_46px_130px_rgba(0,0,0,0.46)] sm:mt-20 sm:h-[44rem] sm:rounded-[2.75rem] lg:h-[48rem]">
-          <Image
-            alt="The upper lounge inside Waterloo's Student Life Centre, with black-and-gold flooring and campus buildings beyond the windows"
-            className="um-immersive-photo object-cover brightness-[0.78] saturate-[0.94] contrast-[1.06]"
-            fill
-            sizes="(min-width: 1320px) 1320px, 100vw"
-            src="/waterloo/slc-interior.webp"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,11,0.26),transparent_42%,rgba(5,7,11,0.88)_100%)]"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[radial-gradient(circle_at_72%_28%,rgba(242,213,111,0.12),transparent_34%)]"
-          />
-
-          <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-6 p-6 sm:p-9 lg:p-11">
-            <p className="font-condensed text-[0.66rem] font-bold uppercase tracking-[0.2em] text-[#f3eee5]/75">
-              Student Life Centre / Waterloo
+          <div className={s.headerAside}>
+            <p>
+              The desk for your new place. The book for your next class. The little things that make
+              campus yours.
             </p>
-            <span className="size-2 rounded-full bg-um-gold-300 shadow-[0_0_18px_rgba(242,213,111,0.65)]" />
+            <Link className={s.textLink} href="/marketplace" prefetch={false}>
+              Browse the marketplace <ArrowUpRight aria-hidden="true" size={16} />
+            </Link>
           </div>
-
-          <blockquote className="absolute bottom-8 left-6 max-w-3xl sm:bottom-10 sm:left-10 lg:bottom-12 lg:left-12">
-            <p className="um-display-safe font-editorial text-[clamp(2.55rem,5vw,5.2rem)] leading-[1.02] tracking-[-0.02em] text-[#f4efe6]">
-              Verified here.
-              <span className="block text-um-gold-300">Picked up nearby.</span>
-            </p>
-          </blockquote>
-        </figure>
-
-        <div className="mt-12 grid border-y border-white/[0.1] sm:grid-cols-3 lg:mt-16">
-          {principles.map(({ detail, icon: Icon, label }, index) => (
-            <article
-              className={`flex min-h-32 items-start gap-4 py-7 sm:px-7 lg:min-h-36 lg:px-9 lg:py-9 ${
-                index > 0 ? 'border-t border-white/[0.1] sm:border-l sm:border-t-0' : ''
-              }`}
-              key={label}
-            >
-              <Icon className="mt-0.5 size-5 shrink-0 text-um-gold-300" strokeWidth={1.6} />
-              <div>
-                <h3 className="text-lg font-bold tracking-[-0.025em] text-[#f0ebe2]">{label}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#c7c0b5]/64">{detail}</p>
-              </div>
-            </article>
-          ))}
+        </header>
+        <MarketplaceScrollShowcase listings={listings} />
+        <div className={s.trustStrip} data-home-reveal>
+          <p>
+            <span className={s.statusDot} /> Verified Waterloo accounts
+          </p>
+          <p>Student to student</p>
+          <p>Pickup close to campus</p>
         </div>
       </div>
     </section>

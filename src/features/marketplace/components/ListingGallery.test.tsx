@@ -55,7 +55,7 @@ describe('ListingGallery', () => {
     );
   });
 
-  it('uses the configured focus position when rendering a photo', () => {
+  it('fits the entire photo even when a legacy cropping position is present', () => {
     render(
       <ListingGallery
         listing={{
@@ -71,7 +71,8 @@ describe('ListingGallery', () => {
     );
 
     expect(screen.getByRole('img', { name: 'Desk lamp, photo 1 of 1' })).toHaveStyle({
-      objectPosition: '80% 20%',
+      objectFit: 'contain',
+      objectPosition: 'center',
     });
   });
 });

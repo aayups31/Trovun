@@ -115,6 +115,12 @@ export type Message = {
 export type Database = {
   public: {
     Tables: {
+      notification_preferences: {
+        Row: { user_id: string; message_emails_enabled: boolean };
+        Insert: { user_id: string; message_emails_enabled?: boolean };
+        Update: { message_emails_enabled?: boolean };
+        Relationships: [];
+      };
       profiles: {
         Row: Profile;
         Insert: {
@@ -492,6 +498,13 @@ export type Database = {
       };
     };
     Functions: {
+      claim_message_emails: {
+        Args: Record<string, never>;
+        Returns: Array<{ id: string; conversation_id: string; recipient_email: string; lease: string | null }>;
+      };
+      message_email_is_eligible: { Args: { job_id: string }; Returns: boolean };
+      finish_message_email: { Args: { job_id: string; job_lease: string; outcome: string }; Returns: undefined };
+
       complete_onboarding: {
         Args: {
           p_full_name: string;
@@ -558,6 +571,16 @@ export type Database = {
       start_listing_conversation: {
         Args: { p_listing_id: string };
         Returns: Conversation;
+      };
+      search_marketplace: {
+        Args: {
+          p_query: string;
+          p_related_terms?: string[];
+          p_category_slug?: string | null;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: Json;
       };
       search_listings: {
         Args: {

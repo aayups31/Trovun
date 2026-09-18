@@ -6,8 +6,8 @@ import { getPublicStudentProfile } from '@/features/profiles/queries';
 import { requireMarketplaceViewer } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Waterloo seller | UniMarket',
-  description: 'A verified Waterloo seller on UniMarket.',
+  title: 'Waterloo seller | Trovun',
+  description: 'A verified Waterloo seller on Trovun.',
   robots: { follow: false, index: false },
 };
 

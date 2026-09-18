@@ -1,0 +1,36 @@
+
+Running 16 tests using 2 workers
+
+
+(node:82943) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+(node:82944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/16] [chromium] › tests/e2e/homepage.spec.ts:3:1 › homepage remains readable and usable with motion disabled
+[2/16] [chromium] › tests/e2e/homepage.spec.ts:31:1 › homepage does not depend on JavaScript for its content or navigation
+[3/16] [chromium] › tests/e2e/homepage.spec.ts:48:1 › scrolling reveals all three product cards without changing page width
+[4/16] [chromium] › tests/e2e/homepage.spec.ts:63:1 › page scrolling reveals all seven listings without manual controls
+[5/16] [chromium] › tests/e2e/homepage.spec.ts:103:1 › product previews loop automatically without playback buttons
+[6/16] [chromium] › tests/e2e/homepage.spec.ts:118:1 › visible listing photos recover from storage failures without an image proxy
+[7/16] [chromium] › tests/e2e/homepage.spec.ts:142:1 › preview frames move and disappear together while stars stay visible
+[8/16] [chromium] › tests/e2e/homepage.spec.ts:199:1 › gallery photos respond to page scrolling without moving the grid out of flow
+
+(node:83096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/16] [mobile] › tests/e2e/homepage.spec.ts:3:1 › homepage remains readable and usable with motion disabled
+
+(node:83139) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[10/16] [mobile] › tests/e2e/homepage.spec.ts:31:1 › homepage does not depend on JavaScript for its content or navigation
+[11/16] [mobile] › tests/e2e/homepage.spec.ts:48:1 › scrolling reveals all three product cards without changing page width
+[12/16] [mobile] › tests/e2e/homepage.spec.ts:63:1 › page scrolling reveals all seven listings without manual controls
+[13/16] [mobile] › tests/e2e/homepage.spec.ts:103:1 › product previews loop automatically without playback buttons
+[14/16] [mobile] › tests/e2e/homepage.spec.ts:118:1 › visible listing photos recover from storage failures without an image proxy
+[15/16] [mobile] › tests/e2e/homepage.spec.ts:142:1 › preview frames move and disappear together while stars stay visible
+[16/16] [mobile] › tests/e2e/homepage.spec.ts:199:1 › gallery photos respond to page scrolling without moving the grid out of flow
+  16 passed (1.1m)

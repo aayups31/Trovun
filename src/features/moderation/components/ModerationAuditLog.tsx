@@ -58,7 +58,7 @@ export function ModerationAuditLog({
         <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[58rem] border-collapse text-left">
             <caption className="sr-only">
-              Append-only log of listing removals performed by UniMarket moderators
+              Append-only log of listing removals performed by Trovun moderators
             </caption>
             <thead>
               <tr className="border-b border-white/[0.075] bg-white/[0.018] font-condensed text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/30">

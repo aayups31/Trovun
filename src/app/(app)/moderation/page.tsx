@@ -7,8 +7,8 @@ import { getModerationWorkspace } from '@/features/moderation/queries';
 import { requireModerator } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Moderation | UniMarket',
-  description: 'Secure listing moderation and removal history for UniMarket moderators.',
+  title: 'Moderation | Trovun',
+  description: 'Secure listing moderation and removal history for Trovun moderators.',
   robots: { follow: false, index: false },
 };
 

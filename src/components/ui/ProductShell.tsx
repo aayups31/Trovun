@@ -13,6 +13,7 @@ import {
   ProductNavigation,
   SearchNavigationButton,
 } from './ProductNavigation';
+import { ProductPageMotion } from './ProductPageMotion';
 
 type ProductShellProps = {
   avatarUrl: string | null;
@@ -25,25 +26,26 @@ type ProductShellProps = {
 export function ProductShell({ avatarUrl, canSell, children, fullName, role }: ProductShellProps) {
   const identityName =
     fullName?.trim() || (role === 'moderator' ? 'Moderator' : 'Waterloo student');
-  const initials = getProfileInitials(identityName) || 'UM';
+  const initials = getProfileInitials(identityName) || 'T';
 
   return (
     <div className="um-product-dark min-h-screen bg-um-canvas text-um-text-strong">
+      <div aria-hidden="true" className="um-product-atmosphere" />
       <a className="um-skip-link" href="#main-content">
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-white/[0.075] bg-[#070a0f]/92 text-white shadow-[0_12px_36px_rgba(0,0,0,0.13)] backdrop-blur-xl">
-        <div className="mx-auto flex h-[4.35rem] max-w-um-shell items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+      <header className="um-product-header sticky top-0 z-40 border-b text-white">
+        <div className="mx-auto flex h-16 max-w-um-content items-center gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
           <BrandMark
             className="shrink-0"
             href="/marketplace"
-            label="UniMarket marketplace"
+            label="Trovun marketplace"
             showCampusLabel={false}
             tone="light"
           />
 
-          <span aria-hidden="true" className="mx-3 hidden h-5 w-px bg-white/[0.09] lg:block" />
+          <span aria-hidden="true" className="mx-3 hidden h-5 w-px bg-white/[0.08] lg:block" />
 
           <ProductNavigation canSell={canSell} isModerator={role === 'moderator'} />
 
@@ -91,7 +93,8 @@ export function ProductShell({ avatarUrl, canSell, children, fullName, role }: P
         </div>
       </header>
 
-      <main className="pb-20 lg:pb-0" id="main-content" tabIndex={-1}>
+      <main className="relative pb-20 lg:pb-0" id="main-content" tabIndex={-1}>
+        <ProductPageMotion />
         {children}
       </main>
 

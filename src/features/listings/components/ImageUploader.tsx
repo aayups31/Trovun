@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   closestCenter,
@@ -52,20 +52,6 @@ type UploadJob = {
 };
 
 const IMAGE_TRANSFER_TIMEOUT_MS = 90_000;
-
-function toObjectPositionValue(value?: string) {
-  if (!value) return '50% 35%';
-  if (value.startsWith('object-[') && value.includes('_')) {
-    const match = value.match(/object-\[(\d+)%_(\d+)%\]/);
-    if (match) {
-      return `${match[1]}% ${match[2]}%`;
-    }
-  }
-  if (value.startsWith('object-position:')) {
-    return value.replace('object-position:', '').trim();
-  }
-  return value;
-}
 
 type ImageUploaderProps = {
   listingId: string | null;
@@ -588,20 +574,25 @@ export function ImageUploader({
         ? 'Finishing your photo upload… keep this page open until it is ready.'
         : 'JPEG, PNG, or WebP · up to 5 MB each · drag to reorder · the first photo is the cover';
   return (
-    <section id="images" aria-labelledby="images-heading" className="scroll-mt-32 pb-12 sm:pb-14">
+    <section
+      id="images"
+      aria-labelledby="images-heading"
+      className="um-sell-section scroll-mt-32 rounded-[1.35rem] px-5 py-8 sm:rounded-[1.65rem] sm:px-8 sm:py-10 lg:px-10"
+    >
       <div className="mb-6 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
-        <div className="border-l-2 border-um-gold-500 pl-4">
-          <p className="font-condensed text-xs font-bold uppercase tracking-[0.15em] text-um-gold-700">
+        <div>
+          <p className="font-condensed text-[0.68rem] font-bold uppercase tracking-[0.17em] text-um-gold-300/78">
             Add photos
           </p>
           <h2
             id="images-heading"
-            className="mt-1.5 text-2xl font-bold tracking-[-0.035em] text-um-text-strong"
+            className="mt-2 text-[clamp(1.65rem,3vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.045em] text-um-text-strong"
           >
-            Make the item easy to understand
+            Show the item
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-um-text-muted">
-            Show it clearly from a few angles. The first photo becomes the cover.
+            Add a few clear angles. The first photo is the cover. Photos fit automatically without
+            cropping.
           </p>
         </div>
         <span
@@ -621,8 +612,10 @@ export function ImageUploader({
             <CheckCircle2 aria-hidden="true" className="size-3.5 text-um-success" />
           ) : null}
           {failedCount > 0
-            ? `${failedCount} needs attention`
-            : `${uploadedCount} / ${LISTING_IMAGE_MAX_COUNT} ready`}
+            ? 'Uploads need attention'
+            : uploadedCount > 0
+              ? 'Photos ready'
+              : 'Add photos'}
         </span>
       </div>
 
@@ -657,7 +650,7 @@ export function ImageUploader({
           void uploadFiles(Array.from(event.dataTransfer.files));
         }}
         className={cn(
-          'relative overflow-hidden rounded-um-md border border-dashed border-white/[0.22] bg-um-ink-950 p-3 text-white shadow-[0_20px_55px_rgba(8,12,19,0.28)] transition duration-160 ease-um-out sm:p-5',
+          'relative overflow-hidden rounded-[1.15rem] border border-dashed border-white/[0.17] bg-[#08101a]/82 p-3 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.025)] transition duration-200 ease-um-out sm:p-5',
           isDraggingFiles && 'border-um-gold-400 bg-um-ink-850 shadow-um-gold',
         )}
       >
@@ -669,13 +662,13 @@ export function ImageUploader({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="relative flex min-h-72 w-full flex-col items-center justify-center px-5 text-center outline-none transition duration-160 ease-um-out hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-um-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-um-ink-900"
+            className="relative flex min-h-56 w-full flex-col items-center justify-center px-5 text-center outline-none transition duration-200 ease-um-out hover:bg-white/[0.035] focus-visible:ring-2 focus-visible:ring-um-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-um-ink-900 sm:min-h-64"
           >
-            <span className="grid size-14 place-items-center border border-white/10 bg-white/[0.06] text-um-gold-400 shadow-um-sm">
+            <span className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/[0.055] text-um-gold-400 shadow-um-sm">
               <ImagePlus aria-hidden="true" className="size-6" strokeWidth={1.8} />
             </span>
             <span className="mt-5 text-lg font-bold tracking-[-0.02em] text-white">
-              Drop your photos here
+              Add clear photos
             </span>
             <span className="mt-1.5 text-sm text-white/52">or choose them from your device</span>
             <span className="mt-5 inline-flex min-h-11 items-center rounded-um-sm bg-um-gold-400 px-4 text-sm font-bold text-um-ink-950 shadow-um-xs">
@@ -795,12 +788,12 @@ function SortableImage({
         alt={`${image.name} preview`}
         fill
         unoptimized
-        className="object-cover"
-        style={{ objectFit: 'cover', objectPosition: toObjectPositionValue(image.focusPosition) }}
+        className="object-contain object-center"
+        style={{ objectFit: 'contain', objectPosition: 'center' }}
       />
       <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/60 to-transparent p-2 text-white">
         <span className="font-condensed rounded-full bg-um-ink-950/80 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] text-white">
-          {index + 1}
+          {index === 0 ? 'Cover' : 'Photo'}
         </span>
         {image.status === 'failed' ? (
           <span className="rounded-full bg-red-500/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white">

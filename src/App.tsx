@@ -3,17 +3,20 @@ import { FinalCTA } from './components/FinalCTA';
 import { Footer } from './components/Footer';
 import { Hero } from './components/Hero';
 import { HowItWorks } from './components/HowItWorks';
+import { MarketingScrollMotion } from './components/MarketingScrollMotion';
 import { Nav } from './components/Nav';
 import { WhyBetter } from './components/WhyBetter';
+import type { PublicListingShowcaseItem } from './features/marketplace/public-showcase';
+import styles from './components/Home.module.css';
 
-export function App() {
+type AppProps = {
+  showcaseListings: PublicListingShowcaseItem[];
+};
+
+export function App({ showcaseListings }: AppProps) {
   return (
-    <div className="um-marketing-page relative isolate min-h-screen w-full text-um-text-strong">
-      <div aria-hidden="true" className="um-marketing-ambient">
-        <span className="um-marketing-ambient__field um-marketing-ambient__field--primary" />
-        <span className="um-marketing-ambient__field um-marketing-ambient__field--secondary" />
-        <span className="um-marketing-ambient__field um-marketing-ambient__field--tertiary" />
-      </div>
+    <div className={styles.home} data-home-root>
+      <MarketingScrollMotion />
       <a className="um-skip-link" href="#main-content">
         Skip to main content
       </a>
@@ -21,7 +24,7 @@ export function App() {
         <Nav />
         <main className="flex-1" id="main-content">
           <Hero />
-          <WhyBetter />
+          <WhyBetter listings={showcaseListings} />
           <HowItWorks />
           <Categories />
           <FinalCTA />

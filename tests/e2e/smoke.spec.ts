@@ -6,11 +6,11 @@ test('landing page presents the real Waterloo-only product', async ({ page }) =>
   await expect(
     page.getByRole('heading', {
       level: 1,
-      name: /your university.*your people.*just for you/i,
+      name: /good things.*right here/i,
     }),
   ).toBeVisible();
   await expect(
-    page.locator('#main-content').getByRole('link', { name: 'Join with Waterloo', exact: true }),
+    page.locator('#main-content').getByRole('link', { name: 'Find your people', exact: true }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'Sign in', exact: true }).first()).toHaveAttribute(
     'href',

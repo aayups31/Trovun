@@ -90,7 +90,7 @@ export function ProductNavigation({ canSell, isModerator }: ProductNavigationPro
           <Link
             aria-current={isCurrent ? 'page' : undefined}
             className={cn(
-              'relative inline-flex min-h-10 items-center rounded-full px-3.5 text-sm font-semibold transition-colors duration-220 ease-um-out after:absolute after:bottom-1.5 after:left-1/2 after:size-1 after:-translate-x-1/2 after:rounded-full after:bg-um-gold-300 after:transition-[opacity,transform] after:duration-220',
+              'relative inline-flex min-h-10 items-center rounded-full px-3.5 text-sm font-semibold transition-colors duration-220 ease-um-out after:absolute after:bottom-1.5 after:left-1/2 after:h-px after:w-5 after:-translate-x-1/2 after:bg-um-gold-300 after:transition-[opacity,transform] after:duration-220',
               isCurrent
                 ? 'bg-white/[0.065] text-white after:scale-100 after:opacity-100'
                 : 'text-white/54 after:scale-50 after:opacity-0 hover:bg-white/[0.045] hover:text-white',
@@ -112,7 +112,7 @@ export function SearchNavigationButton() {
   return (
     <Link
       aria-label="Search the marketplace"
-      className="group inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white/50 ring-1 ring-inset ring-white/[0.08] transition-[background-color,color,box-shadow] duration-220 ease-um-out hover:bg-white/[0.06] hover:text-white hover:ring-white/[0.14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-300"
+      className="group inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white/52 transition-[background-color,color,box-shadow] duration-220 ease-um-out hover:bg-white/[0.055] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-300"
       href="/marketplace#marketplace-search"
       onClick={(event) => {
         if (pathname !== '/marketplace') return;
@@ -149,7 +149,7 @@ export function MessagesNavigationButton({
       aria-current={isCurrent ? 'page' : undefined}
       aria-label={unread > 0 ? `Open messages, ${unread} unread` : 'Open messages'}
       className={cn(
-        'group relative inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white/50 ring-1 ring-inset ring-white/[0.08] transition-[background-color,color,box-shadow] duration-220 ease-um-out hover:bg-white/[0.06] hover:text-white hover:ring-white/[0.14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-300',
+        'group relative inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white/52 transition-[background-color,color,box-shadow] duration-220 ease-um-out hover:bg-white/[0.055] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-300',
         isCurrent && 'bg-white/[0.07] text-um-gold-300 ring-white/[0.13]',
         className,
       )}
@@ -200,7 +200,7 @@ export function MobileTabBar({ canSell, isModerator }: ProductNavigationProps) {
   return (
     <nav
       aria-label="Mobile primary"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-[#070a0f]/94 px-3 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-18px_50px_rgba(0,0,0,0.22)] backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.09] bg-[#070b12]/92 px-3 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-18px_50px_rgba(0,0,0,0.2)] backdrop-blur-2xl lg:hidden"
     >
       <div
         className="mx-auto grid max-w-md gap-1"

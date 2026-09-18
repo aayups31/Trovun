@@ -1,0 +1,31 @@
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1000}});
+await page.goto('http://localhost:3000');
+await page.waitForTimeout(800);
+await page.screenshot({path:'artifacts/home-hero-v3.png'});
+await page.locator('#why-waterloo').evaluate(el=>window.scrollTo({top:el.getBoundingClientRect().top+scrollY-115,behavior:'instant'}));
+await page.waitForTimeout(1000);
+await page.screenshot({path:'artifacts/home-finds-v3.png'});
+await page.locator('[data-home-listings]').evaluate(el => {
+  const sample=el.firstElementChild;
+  while(el.children.length<7) { const card=sample.cloneNode(true); card.removeAttribute('style'); el.appendChild(card); }
+});
+await page.waitForFunction(() => document.querySelector('[data-home-carousel]').hasAttribute('data-carousel-enhanced'));
+await page.locator('[data-home-carousel]').evaluate(el => window.scrollTo({top:el.getBoundingClientRect().top+scrollY-110+350,behavior:'instant'}));
+await page.waitForTimeout(800);
+await page.screenshot({path:'artifacts/home-finds-slider-seven.png'});
+await page.locator('[data-preview="access"]').scrollIntoViewIfNeeded();
+await page.waitForTimeout(1500);
+await page.screenshot({path:'artifacts/home-stars-v3.png'});
+await page.waitForFunction(() => [...document.querySelectorAll('[data-home-scene-panel]')].every(el => getComputedStyle(el).visibility === 'hidden'), {timeout: 14000});
+await page.screenshot({path:'artifacts/home-preview-frames-hidden.png'});
+await page.locator('#categories').scrollIntoViewIfNeeded();
+await page.waitForTimeout(1000);
+await page.screenshot({path:'artifacts/home-categories-v3.png'});
+console.log('Broken images:',await page.locator('img').evaluateAll(nodes=>nodes.filter(n=>n.complete&&!n.naturalWidth).map(n=>n.getAttribute('src'))));
+await page.setViewportSize({width:390,height:844});
+await page.goto('http://localhost:3000');
+await page.waitForTimeout(800);
+await page.screenshot({path:'artifacts/home-mobile-v3.png'});
+await browser.close();

@@ -1,6 +1,6 @@
-# UniMarket Supabase foundation
+# Trovun Supabase foundation
 
-This directory is the source of truth for the UniMarket database, authentication boundary, and listing-image bucket. Migrations are ordered and safe to apply with the Supabase CLI.
+This directory is the source of truth for the Trovun database, authentication boundary, and listing-image bucket. Migrations are ordered and safe to apply with the Supabase CLI.
 
 ## Local development
 
@@ -37,7 +37,7 @@ Do not blindly run `npx supabase config push` against production: this repositor
 Before deploying:
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the canonical deployed origin.
-2. In **Authentication → Email Templates → Confirm signup**, set the subject to `Your UniMarket verification code` and paste `templates/confirmation.html`. Keep `{{ .Token }}` and remove every `{{ .ConfirmationURL }}`.
+2. In **Authentication → Email Templates → Confirm signup**, set the subject to `Your Trovun verification code` and paste `templates/confirmation.html`. Keep `{{ .Token }}` and remove every `{{ .ConfirmationURL }}`.
 3. In the hosted email Auth settings, keep email confirmation enabled and set OTP length to `6`, expiry to `900` seconds, and minimum resend interval to `60` seconds.
 4. Keep the deployed `/auth/recovery-callback` and required localhost recovery callbacks in the hosted redirect allowlist.
 5. If moderator access is needed, add an exact `@uwaterloo.ca` address to `private.admin_user_allowlist` through a trusted administrative path before creating or promoting that account. Non-Waterloo moderator exceptions are not permitted.

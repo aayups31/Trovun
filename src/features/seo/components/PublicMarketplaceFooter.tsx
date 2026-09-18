@@ -32,7 +32,7 @@ export function PublicMarketplaceFooter() {
         </nav>
       </div>
       <div className="mx-auto flex max-w-um-content items-center justify-between border-t border-white/[0.07] px-4 py-5 text-[0.7rem] text-white/30 sm:px-6 lg:px-8">
-        <span>UniMarket Waterloo</span>
+        <span>Trovun Waterloo</span>
         <span>Student to student</span>
       </div>
     </footer>

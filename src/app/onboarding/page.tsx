@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -78,7 +78,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
             One last step
           </p>
           <h1 className="um-balanced mt-4 max-w-2xl text-[clamp(3rem,5.6vw,5.1rem)] font-semibold leading-[0.94] tracking-[-0.057em] text-um-text-strong">
-            Make UniMarket yours.
+            Make Trovun yours.
           </h1>
           <p className="um-pretty mt-5 max-w-xl text-base leading-7 text-black/50">
             Add the details students need to recognize who they are trading with.

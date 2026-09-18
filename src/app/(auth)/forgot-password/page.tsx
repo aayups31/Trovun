@@ -4,7 +4,7 @@ import { ForgotPasswordForm } from '@/features/auth/components/forgot-password-f
 
 export const metadata: Metadata = {
   title: 'Recover password',
-  description: 'Request a password recovery email for UniMarket.',
+  description: 'Request a password recovery email for Trovun.',
 };
 
 type ForgotPasswordPageProps = {

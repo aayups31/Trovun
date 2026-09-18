@@ -14,18 +14,18 @@ type ListingPageProps = {
 
 export async function generateMetadata({ params }: ListingPageProps): Promise<Metadata> {
   const { id } = await params;
-  if (!isUuid(id)) return { title: 'Listing not found | UniMarket' };
+  if (!isUuid(id)) return { title: 'Listing not found | Trovun' };
 
   try {
     const { listing } = await getMarketplaceListing(id);
-    if (!listing) return { title: 'Listing not found | UniMarket' };
+    if (!listing) return { title: 'Listing not found | Trovun' };
 
     return {
-      title: `${listing.title} | UniMarket`,
+      title: `${listing.title} | Trovun`,
       description: listing.description.replace(/\s+/g, ' ').slice(0, 155),
     };
   } catch {
-    return { title: 'Listing | UniMarket' };
+    return { title: 'Listing | Trovun' };
   }
 }
 

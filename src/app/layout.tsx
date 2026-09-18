@@ -24,14 +24,14 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'UniMarket Waterloo | Student Marketplace',
-    template: '%s | UniMarket Waterloo',
+    default: 'Trovun Waterloo | Student Marketplace',
+    template: '%s | Trovun Waterloo',
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: 'UniMarket' }],
-  creator: 'UniMarket',
-  publisher: 'UniMarket',
+  authors: [{ name: 'Trovun' }],
+  creator: 'Trovun',
+  publisher: 'Trovun',
   category: 'student marketplace',
   formatDetection: {
     address: false,
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_CA',
-    siteName: 'UniMarket',
-    title: 'UniMarket Waterloo | Student Marketplace',
+    siteName: 'Trovun',
+    title: 'Trovun Waterloo | Student Marketplace',
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     images: [
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'UniMarket — the student marketplace for Waterloo',
+        alt: 'Trovun — the student marketplace for Waterloo',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UniMarket Waterloo | Student Marketplace',
+    title: 'Trovun Waterloo | Student Marketplace',
     description: SITE_DESCRIPTION,
     images: ['/opengraph-image'],
   },

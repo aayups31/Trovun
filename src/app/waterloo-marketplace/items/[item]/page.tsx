@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ArrowLeft, ArrowRight, BadgeCheck, Search, ShieldCheck } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: ItemPageProps): Promise<Metad
       canonical,
     },
     openGraph: {
-      title: `${item.title} | UniMarket`,
+      title: `${item.title} | Trovun`,
       description: item.description,
       url: canonical,
     },
@@ -82,7 +82,7 @@ export default async function ItemSearchPage({ params }: ItemPageProps) {
               {
                 '@type': 'ListItem',
                 position: 1,
-                name: 'UniMarket',
+                name: 'Trovun',
                 item: SITE_URL,
               },
               {

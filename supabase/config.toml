@@ -1,4 +1,4 @@
-# Local Supabase configuration for UniMarket.
+# Local Supabase configuration for Trovun.
 # Hosted Auth policy and redirect settings can be pushed with the CLI; see README.md.
 project_id = "unimarket"
 
@@ -72,7 +72,7 @@ otp_length = 6
 otp_expiry = 900
 
 [auth.email.template.confirmation]
-subject = "Your UniMarket verification code"
+subject = "Your Trovun verification code"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.mfa.totp]
@@ -89,3 +89,6 @@ uri = "pg-functions://postgres/public/hook_restrict_signup"
 
 [analytics]
 enabled = false
+
+[functions.message-emails]
+verify_jwt = false

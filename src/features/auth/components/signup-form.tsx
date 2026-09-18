@@ -251,7 +251,7 @@ export function SignupForm({ nextPath }: { nextPath: string }) {
               </>
             ) : (
               <>
-                Join UniMarket
+                Join Trovun
                 <ArrowRight
                   aria-hidden="true"
                   className="size-4 text-um-gold-400 transition-transform group-hover:translate-x-1"

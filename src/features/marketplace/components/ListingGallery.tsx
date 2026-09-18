@@ -1,24 +1,10 @@
 'use client';
 
-import Image from 'next/image';
+import Image from '@/components/ui/ResilientImage';
 import { ImageIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import type { MarketplaceImage, MarketplaceListing } from '../types';
-
-function toObjectPositionValue(value?: string) {
-  if (!value) return '50% 35%';
-  if (value.startsWith('object-[') && value.includes('_')) {
-    const match = value.match(/object-\[(\d+)%_(\d+)%\]/);
-    if (match) {
-      return `${match[1]}% ${match[2]}%`;
-    }
-  }
-  if (value.startsWith('object-position:')) {
-    return value.replace('object-position:', '').trim();
-  }
-  return value;
-}
 
 export function ListingGallery({ listing }: { listing: MarketplaceListing }) {
   const availableImages = listing.images.filter(
@@ -37,12 +23,12 @@ export function ListingGallery({ listing }: { listing: MarketplaceListing }) {
         {selectedImage ? (
           <Image
             alt={`${listing.title}, photo ${selectedPosition} of ${availableImages.length}`}
-            className="object-cover"
+            className="object-contain object-center"
             fill
             priority
-            sizes="(min-width: 1024px) 66vw, 100vw"
+            sizes="(min-width: 1320px) 863px, (min-width: 1208px) calc(71vw - 74px), (min-width: 1024px) calc(100vw - 424px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
             src={selectedImage.url}
-            style={{ objectFit: 'cover', objectPosition: toObjectPositionValue(selectedImage.focusPosition) }}
+            style={{ objectFit: 'contain', objectPosition: 'center' }}
           />
         ) : (
           <div className="relative isolate grid h-full place-items-center overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(231,188,53,0.09),transparent_18rem),#111923] px-8 text-center">
@@ -86,11 +72,11 @@ export function ListingGallery({ listing }: { listing: MarketplaceListing }) {
               >
                 <Image
                   alt=""
-                  className="object-cover"
+                  className="object-contain object-center"
                   fill
-                  sizes="(min-width: 1024px) 10vw, 25vw"
+                  sizes="(min-width: 640px) 96px, 86px"
                   src={image.url}
-                  style={{ objectFit: 'cover', objectPosition: toObjectPositionValue(image.focusPosition) }}
+                  style={{ objectFit: 'contain', objectPosition: 'center' }}
                 />
               </button>
             );

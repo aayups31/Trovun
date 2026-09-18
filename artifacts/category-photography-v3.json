@@ -1,0 +1,49 @@
+{
+  "mode": "Built-in image generation tool; model selection not exposed",
+  "images": [
+    {
+      "category": "electronics",
+      "prompt": "Use case: photorealistic-natural. Asset type: university student marketplace category photograph, landscape 3:2. Real editorial photography, tactile materials, soft natural afternoon window light, warm cream and muted charcoal tones, beautiful but believable student apartment. Carefully composed, authentic lightly used belongings, clean and inviting, no people, no lettering, no logos, no watermarks. Subjects clearly recognizable in a square thumbnail as well as wide crop. No CGI or plastic sheen. Subject: A slim open silver laptop with a dark unbranded screen, graphite over-ear headphones and a wireless mouse on an oak study desk by a window. Close three-quarter view, realistic keyboard, subtle wear, soft campus greenery beyond the window.",
+      "source": "/Users/AAYU/.codex/generated_images/01a0886c-4f28-7842-961f-fd3c5ac02ffc/exec-6e435781-df65-4db1-a98d-188cdfc6fdaa.png",
+      "saved_files": [
+        "public/waterloo/category-electronics-photo-v3.webp",
+        "public/waterloo/category-electronics-photo-v3-480.webp",
+        "public/waterloo/category-electronics-photo-v3-960.webp",
+        "public/waterloo/category-electronics-photo-v3-1600.webp"
+      ]
+    },
+    {
+      "category": "books",
+      "prompt": "Use case: photorealistic-natural. Asset type: university student marketplace category photograph, landscape 3:2. Real editorial photography, tactile materials, soft natural afternoon window light, warm cream and muted charcoal tones, beautiful but believable student apartment. Carefully composed, authentic lightly used belongings, clean and inviting, no people, no lettering, no logos, no watermarks. Subjects clearly recognizable in a square thumbnail as well as wide crop. No CGI or plastic sheen. Subject: A small inviting stack of well-used university textbooks with unlettered cream, sage and rust cloth covers, an open book showing natural unrecognizable print texture and a pencil, on an oak library table. Close three-quarter view, tactile paper edges and soft shelves in the background.",
+      "source": "/Users/AAYU/.codex/generated_images/01a0886c-4f28-7842-961f-fd3c5ac02ffc/exec-2983c757-6166-4cff-9c96-436e073db69c.png",
+      "saved_files": [
+        "public/waterloo/category-books-photo-v3.webp",
+        "public/waterloo/category-books-photo-v3-480.webp",
+        "public/waterloo/category-books-photo-v3-960.webp",
+        "public/waterloo/category-books-photo-v3-1600.webp"
+      ]
+    },
+    {
+      "category": "household",
+      "prompt": "Use case: photorealistic-natural. Asset type: university student marketplace category photograph, landscape 3:2. Real editorial photography, tactile materials, soft natural afternoon window light, warm cream and muted charcoal tones, beautiful but believable student apartment. Carefully composed, authentic lightly used belongings, clean and inviting, no people, no lettering, no logos, no watermarks. Subjects clearly recognizable in a square thumbnail as well as wide crop. No CGI or plastic sheen. Subject: An inviting student apartment corner with a small oak side table, sculptural warm cream desk lamp, a ceramic mug and a small plant, linen armchair at the edge. Close three-quarter view with softly lit plaster wall, realistic fabric and ceramic texture.",
+      "source": "/Users/AAYU/.codex/generated_images/01a0886c-4f28-7842-961f-fd3c5ac02ffc/exec-33628967-6dfb-4f6b-bc75-8c2ced74b885.png",
+      "saved_files": [
+        "public/waterloo/category-household-photo-v3.webp",
+        "public/waterloo/category-household-photo-v3-480.webp",
+        "public/waterloo/category-household-photo-v3-960.webp",
+        "public/waterloo/category-household-photo-v3-1600.webp"
+      ]
+    },
+    {
+      "category": "clothing",
+      "prompt": "Use case: photorealistic-natural. Asset type: university student marketplace category photograph, landscape 3:2. Real editorial photography, tactile materials, soft natural afternoon window light, warm cream and muted charcoal tones, beautiful but believable student apartment. Carefully composed, authentic lightly used belongings, clean and inviting, no people, no lettering, no logos, no watermarks. Subjects clearly recognizable in a square thumbnail as well as wide crop. No CGI or plastic sheen. Subject: A navy sweatshirt and cream knit sweater casually folded on an oak bench, clean everyday canvas sneakers beside them, a soft olive jacket draped at the edge. Sunlit student apartment, close three-quarter view, beautiful realistic cotton, knit and canvas textures.",
+      "source": "/Users/AAYU/.codex/generated_images/01a0886c-4f28-7842-961f-fd3c5ac02ffc/exec-3cca9614-0465-4bb3-9b0f-504fb58569ba.png",
+      "saved_files": [
+        "public/waterloo/category-clothing-photo-v3.webp",
+        "public/waterloo/category-clothing-photo-v3-480.webp",
+        "public/waterloo/category-clothing-photo-v3-960.webp",
+        "public/waterloo/category-clothing-photo-v3-1600.webp"
+      ]
+    }
+  ]
+}

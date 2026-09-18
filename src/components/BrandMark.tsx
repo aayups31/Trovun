@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { TrovunGlyph } from '@/components/TrovunGlyph';
 import { cn } from '@/lib/utils';
 
 type BrandMarkProps = {
@@ -14,7 +14,7 @@ type BrandMarkProps = {
 export function BrandMark({
   className,
   href = '/',
-  label = 'UniMarket home',
+  label = 'Trovun home',
   showCampusLabel = true,
   tone = 'dark',
 }: BrandMarkProps) {
@@ -27,14 +27,11 @@ export function BrandMark({
         className,
       )}
     >
-      <span aria-hidden="true" className="relative grid size-9 shrink-0 place-items-center">
-        <Image
-          alt=""
-          className="size-9 object-contain"
-          height={72}
-          src="/brand/unimarket-mark.png"
-          width={72}
-        />
+      <span
+        aria-hidden="true"
+        className="relative grid size-9 shrink-0 place-items-center text-um-gold-300 drop-shadow-[0_8px_18px_rgba(224,171,48,0.2)]"
+      >
+        <TrovunGlyph className="size-9" />
       </span>
 
       <span className="flex flex-col leading-none">
@@ -44,7 +41,7 @@ export function BrandMark({
             tone === 'light' ? 'text-um-text-inverse' : 'text-um-text-strong',
           )}
         >
-          UniMarket
+          Trovun
         </span>
         {showCampusLabel ? (
           <span

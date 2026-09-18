@@ -297,7 +297,7 @@ select throws_ok(
     )
   $$,
   '22023',
-  'UniMarket requires an @uwaterloo.ca email address.',
+  'Trovun requires an @uwaterloo.ca email address.',
   'the database trigger blocks a non-Waterloo Auth user'
 );
 

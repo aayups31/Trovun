@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions, pg_catalog;
 
-select plan(30);
+select plan(39);
 
 insert into private.admin_user_allowlist (email, role, note)
 values (
@@ -388,6 +388,41 @@ select is(
   'the buyer unread count clears'
 );
 
+select ok(
+  (public.search_marketplace('Messaging test monitor')->'ids') @>
+    '["61100000-0000-4000-8000-000000000001"]'::jsonb,
+  'search finds a published title'
+);
+select ok(
+  (public.search_marketplace('display', array['monitor'])->'ids') @>
+    '["61100000-0000-4000-8000-000000000001"]'::jsonb,
+  'search finds a related item without the literal query word'
+);
+select ok(
+  (public.search_marketplace('monitr')->'ids') @>
+    '["61100000-0000-4000-8000-000000000001"]'::jsonb,
+  'search tolerates a misspelled item name'
+);
+select ok(
+  not ((public.search_marketplace('monitor', '{}', 'books')->'ids') @>
+    '["61100000-0000-4000-8000-000000000001"]'::jsonb),
+  'related search keeps the selected category restriction'
+);
+select ok(
+  not ((public.search_marketplace('Private messaging draft')->'ids') @>
+    '["61200000-0000-4000-8000-000000000002"]'::jsonb),
+  'search never includes a private draft'
+);
+select is(
+  public.search_marketplace('Messaging test monitor', '{}', null, 12, 24000)->'total',
+  public.search_marketplace('Messaging test monitor')->'total',
+  'empty pages retain the correct result count'
+);
+select ok(
+  not has_function_privilege('anon', 'public.search_marketplace(text,text[],text,integer,integer)', 'execute'),
+  'anonymous visitors cannot search the private marketplace'
+);
+
 reset role;
 update public.listings
 set
@@ -464,6 +499,17 @@ select throws_ok(
   '42501',
   'permission denied for table messages',
   'authenticated callers cannot update immutable messages'
+);
+
+select is(
+  (select count(*)::integer from public.seller_profiles where id = '61000000-0000-4000-8000-000000000001'),
+  1,
+  'a chat counterpart profile remains visible after the listing is deleted'
+);
+select is(
+  (select count(*)::integer from public.seller_profiles where id = '63000000-0000-4000-8000-000000000003'),
+  0,
+  'an unrelated student without published listings is not exposed'
 );
 
 select * from finish();

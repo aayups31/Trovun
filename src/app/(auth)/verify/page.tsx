@@ -7,7 +7,7 @@ import { getSafeNextPath } from '@/lib/auth/navigation';
 
 export const metadata: Metadata = {
   title: 'Enter your verification code',
-  description: 'Verify your Waterloo email to continue to UniMarket.',
+  description: 'Verify your Waterloo email to continue to Trovun.',
 };
 
 type VerifyPageProps = {

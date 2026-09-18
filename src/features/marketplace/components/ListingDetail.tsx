@@ -31,8 +31,8 @@ export function ListingDetail({
   const posted = formatPostedDate(listing.publishedAt ?? listing.createdAt) ?? 'Recently';
 
   return (
-    <div className="min-h-[calc(100dvh-4.35rem)] bg-um-canvas text-um-text-strong">
-      <div className="mx-auto max-w-um-content px-4 pb-32 pt-5 sm:px-6 lg:px-8 lg:pb-24 lg:pt-8">
+    <div className="min-h-[calc(100dvh-4rem)] text-um-text-strong">
+      <div className="mx-auto max-w-um-content px-4 pb-32 pt-4 sm:px-6 lg:px-8 lg:pb-24 lg:pt-6">
         <div className="flex items-center gap-4">
           <Link
             className="inline-flex min-h-11 items-center gap-2 rounded-full px-1 text-sm font-semibold text-um-text-muted transition hover:text-um-text-strong focus-visible:ring-2 focus-visible:ring-um-gold-400"
@@ -63,21 +63,19 @@ export function ListingDetail({
           </div>
         ) : null}
 
-        <div className="mt-5 grid items-start gap-8 lg:grid-cols-[minmax(0,1.38fr)_minmax(21rem,0.62fr)] lg:gap-12">
+        <div className="mt-3 grid items-start gap-7 lg:grid-cols-[minmax(0,1.42fr)_minmax(20rem,0.58fr)] lg:gap-10">
           <div className="min-w-0">
             <ListingGallery listing={listing} />
 
             <section
-              className="mt-9 border-t border-white/[0.09] pt-8"
+              className="mt-8 border-t border-white/[0.08] pt-7"
               aria-labelledby="details-heading"
             >
-              <p className="font-condensed text-[0.66rem] font-bold uppercase tracking-[0.18em] text-um-gold-300">
-                Details
-              </p>
+              <p className="text-xs font-semibold text-white/46">About this item</p>
               <h2 className="sr-only" id="details-heading">
                 About this item
               </h2>
-              <div className="mt-3 max-w-3xl whitespace-pre-wrap break-words text-[0.98rem] leading-7 text-um-text">
+              <div className="mt-3 max-w-3xl whitespace-pre-wrap break-words text-[0.96rem] leading-7 text-um-text">
                 {listing.description}
               </div>
             </section>
@@ -89,9 +87,8 @@ export function ListingDetail({
           </div>
 
           <aside className="min-w-0 lg:sticky lg:top-24">
-            <div className="overflow-hidden rounded-[1.35rem] border border-white/[0.1] bg-[#0d141e]/92 shadow-[0_28px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl">
-              <div className="h-px bg-[linear-gradient(90deg,transparent,rgba(242,213,111,0.78),transparent)]" />
-              <div className="p-5 sm:p-7">
+            <div className="um-product-panel um-campus-signal overflow-hidden rounded-[1.1rem] pl-0">
+              <div className="p-5 pl-6 sm:p-6 sm:pl-7">
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-condensed truncate text-[0.64rem] font-bold uppercase tracking-[0.16em] text-white/42">
                     {listing.category?.label ?? 'Marketplace'}
@@ -103,11 +100,11 @@ export function ListingDetail({
                   ) : null}
                 </div>
 
-                <h1 className="mt-4 break-words pb-1 text-[clamp(2rem,4vw,3.15rem)] font-bold leading-[1.08] tracking-[-0.052em] text-white">
+                <h1 className="mt-3 break-words pb-1 text-[clamp(1.8rem,3.4vw,2.7rem)] font-bold leading-[1.08] tracking-[-0.045em] text-white">
                   {listing.title}
                 </h1>
                 <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <p className="text-[2.2rem] font-bold tracking-[-0.06em] text-white">
+                  <p className="text-[1.9rem] font-bold tracking-[-0.05em] text-white">
                     {formatPrice(listing.priceCents)}
                   </p>
                   {listing.openToOffers ? (
@@ -115,7 +112,7 @@ export function ListingDetail({
                   ) : null}
                 </div>
 
-                <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 border-y border-white/[0.09] py-5">
+                <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-5 border-y border-white/[0.08] py-[1.125rem]">
                   <DetailItem
                     icon={<Tag className="size-3.5" />}
                     label="Condition"
@@ -170,7 +167,7 @@ export function ListingDetail({
 
       {!isOwner && canMessage ? (
         <div className="fixed inset-x-3 bottom-[5.05rem] z-30 lg:hidden">
-          <div className="mx-auto max-w-lg rounded-[1rem] border border-white/[0.1] bg-[#0d141e]/94 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl">
+          <div className="mx-auto max-w-lg rounded-[0.9rem] border border-white/[0.1] bg-[#0a111b]/94 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.38)] backdrop-blur-xl">
             <MessageSellerButton listingId={listing.id} />
           </div>
         </div>

@@ -72,7 +72,7 @@ export const waterlooTheme = {
   ],
   seasonalCampaigns: [],
   legalDisclosure:
-    'UniMarket is an independent student-built platform and is not officially affiliated with the University of Waterloo.',
+    'Trovun is an independent student-built platform and is not officially affiliated with the University of Waterloo.',
 } as const satisfies UniversityTheme;
 
 const universityThemes: Readonly<Record<string, UniversityTheme>> = {

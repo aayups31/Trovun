@@ -273,7 +273,7 @@ describe('auth server actions', () => {
       {
         error: { code: 'email_address_not_authorized', status: 403 },
         message:
-          'Email delivery is not enabled for this address. Please contact UniMarket support.',
+          'Email delivery is not enabled for this address. Please contact Trovun support.',
       },
       {
         error: { code: 'over_email_send_rate_limit', status: 429 },
@@ -491,7 +491,7 @@ describe('auth server actions', () => {
 
       expect(result).toEqual({
         ok: false,
-        message: 'Use an eligible UniMarket account to continue.',
+        message: 'Use an eligible Trovun account to continue.',
       });
       expect(context.signOut).toHaveBeenCalledWith({ scope: 'local' });
       expect(context.from).not.toHaveBeenCalled();

@@ -6,7 +6,7 @@ import { getCurrentIdentity } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Choose a new password',
-  description: 'Set a new password for your UniMarket account.',
+  description: 'Set a new password for your Trovun account.',
 };
 
 export default async function UpdatePasswordPage() {

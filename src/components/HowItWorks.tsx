@@ -1,245 +1,183 @@
-'use client';
-
-import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-
-type MotionPreference = 'allow' | 'pending' | 'reduce';
-type MotionSceneName = 'access' | 'browse' | 'network';
-
-type MotionScene = {
-  caption: string;
-  name: MotionSceneName;
-};
-
-const motionScenes: MotionScene[] = [
-  {
-    name: 'access',
-    caption: 'One Waterloo email. Your campus opens.',
-  },
-  {
-    name: 'browse',
-    caption: 'Find what Waterloo already has.',
-  },
-  {
-    name: 'network',
-    caption: 'One university identity brings everyone closer.',
-  },
-];
+import { ArrowUpRight, Check, CheckCheck, Search, ShieldCheck } from 'lucide-react';
+import Image from '@/components/ui/ResilientImage';
+import { TrovunGlyph } from './TrovunGlyph';
+import s from './Home.module.css';
 
 export function HowItWorks() {
   return (
     <section
-      aria-labelledby="inside-unimarket-heading"
-      className="relative scroll-mt-24 overflow-hidden bg-transparent px-4 py-20 text-[#eee9df] sm:px-6 sm:py-28 lg:py-36"
+      className={`${s.section} ${s.storySection}`}
       id="how-it-works"
+      data-home-story
+      aria-labelledby="how-heading"
     >
-      <div className="relative mx-auto max-w-um-content">
-        <header className="mb-12 flex flex-col gap-5 sm:mb-16 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="font-condensed text-xs font-bold uppercase tracking-[0.18em] text-um-gold-400">
-              Inside UniMarket
-            </p>
-            <h2
-              className="um-balanced um-display-safe mt-4 max-w-3xl text-[clamp(2.55rem,5vw,5.25rem)] font-bold leading-[1.01] tracking-[-0.032em] sm:leading-[0.99]"
-              id="inside-unimarket-heading"
-            >
-              Your campus,
-              <span className="font-editorial font-normal tracking-[-0.02em] text-um-gold-300">
-                {' '}
-                already connected.
-              </span>
-            </h2>
-          </div>
-          <p className="max-w-xs text-sm leading-6 text-white/46 sm:pb-1 sm:text-right">
-            One identity. One marketplace. Only Waterloo.
-          </p>
+      <div className={`${s.wrap} ${s.storySticky}`}>
+        <header className={s.storyHeader} data-home-reveal>
+          <p className={s.eyebrow}>Less friction. More connection.</p>
+          <h2 className={s.heading} id="how-heading">
+            It feels <span className={s.serif}>familiar.</span>
+          </h2>
+          <p>A shared campus makes everything a little easier.</p>
         </header>
-
-        <ol className="grid list-none gap-x-5 gap-y-12 p-0 md:grid-cols-2 xl:grid-cols-[0.96fr_1.08fr_0.96fr] xl:items-start">
-          {motionScenes.map((scene, index) => (
-            <li
-              className={
-                index === 2
-                  ? 'md:col-span-2 md:mx-auto md:w-[calc(50%-0.625rem)] xl:col-span-1 xl:w-full'
-                  : index === 1
-                    ? 'xl:-mt-7'
-                    : ''
-              }
-              key={scene.name}
-            >
-              <MotionStory scene={scene} />
-            </li>
-          ))}
-        </ol>
+        <div className={s.storyGrid} data-home-stage>
+          <article className={s.storyCard} data-home-story-card>
+            <div className={`${s.scene} ${s.accessScene}`} aria-hidden="true" data-preview="access">
+              <div className={s.accessPanel} data-home-scene-panel>
+                <div data-preview-content>
+                  <TrovunGlyph className={s.sceneLogo} />
+                  <p className={s.sceneTitle}>You’re in good company.</p>
+                  <p className={s.sceneSub}>A marketplace just for Waterloo.</p>
+                  <div className={s.accessInputStage}>
+                    <div className={s.emailField} data-email-field>
+                      <span>
+                        {'you@uwaterloo.ca'.split('').map((char, index) => (
+                          <span data-email-char key={index}>
+                            {char}
+                          </span>
+                        ))}
+                      </span>
+                      <Check size={15} data-email-check />
+                    </div>
+                    <div className={s.demoCode} data-access-code>
+                      {'294681'.split('').map((digit, index) => (
+                        <span data-code-digit key={index}>
+                          {digit}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className={s.verifiedPill} data-access-verified>
+                    <ShieldCheck size={15} /> Waterloo email verified
+                  </div>
+                  <div className={s.demoButton} data-access-button>
+                    Welcome to Trovun <ArrowUpRight size={15} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={s.storyCaption}>
+              <h3>Your campus is your way in.</h3>
+              <p>Verify your Waterloo email. Meet the community you already belong to.</p>
+            </div>
+          </article>
+          <article className={`${s.storyCard} ${s.browseStory}`} data-home-story-card>
+            <div className={`${s.scene} ${s.browseScene}`} aria-hidden="true" data-preview="browse">
+              <div className={s.browsePanel} data-home-scene-panel>
+                <div data-preview-content>
+                  <div className={s.demoBrand}>
+                    <TrovunGlyph className={s.miniLogo} /> Trovun <span>Waterloo</span>
+                  </div>
+                  <div className={s.demoSearch}>
+                    <Search size={15} />
+                    <span className={s.searchText}>
+                      <span data-search-placeholder>Find your next good thing</span>
+                      <span className={s.searchQuery} data-search-query>
+                        {'desk setup'.split('').map((char, index) => (
+                          <span data-search-char key={index}>
+                            {char}
+                          </span>
+                        ))}
+                      </span>
+                    </span>
+                  </div>
+                  <div className={s.demoTabs}>
+                    <span>For you</span>
+                    <span>Books</span>
+                    <span>Electronics</span>
+                  </div>
+                  <div className={s.demoResultsViewport}>
+                    <div className={s.demoProducts} data-browse-all>
+                      {[
+                        ['electronics', 'Desk setup', '$145'],
+                        ['books', 'Course books', '$38'],
+                        ['household', 'Desk lamp', '$26'],
+                        ['clothing', 'Campus layers', '$32'],
+                      ].map(([category, title, price]) => (
+                        <div key={category}>
+                          <div className={s.demoProductImage}>
+                            <Image
+                              src={`/waterloo/category-${category}-photo-v3.webp`}
+                              alt=""
+                              fill
+                              sizes="150px"
+                            />
+                          </div>
+                          <p>
+                            {title}
+                            <span>{price}</span>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className={s.demoResults} data-browse-results>
+                      <p className={s.resultsLabel}>For your desk</p>
+                      {[
+                        ['electronics', '27″ monitor', '$145'],
+                        ['household', 'Desk lamp', '$26'],
+                      ].map(([category, title, price]) => (
+                        <div className={s.demoResult} key={category}>
+                          <span>
+                            <Image
+                              src={`/waterloo/category-${category}-photo-v3.webp`}
+                              fill
+                              sizes="100px"
+                              alt=""
+                            />
+                          </span>
+                          <p>
+                            {title}
+                            <small>Available on campus</small>
+                          </p>
+                          <strong>{price}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={s.storyCaption}>
+              <h3>Good finds, a little closer.</h3>
+              <p>Browse useful things from students nearby. Find the one that fits your term.</p>
+            </div>
+          </article>
+          <article className={s.storyCard} data-home-story-card>
+            <div className={`${s.scene} ${s.chatScene}`} aria-hidden="true" data-preview="chat">
+              <div className={s.chatPanel} data-home-scene-panel>
+                <div data-preview-content>
+                  <div className={s.chatHeader}>
+                    <span className={s.chatAvatar}>
+                      <TrovunGlyph className={s.miniLogo} />
+                    </span>
+                    <div>
+                      Waterloo student
+                      <small>
+                        <ShieldCheck size={12} /> Verified account
+                      </small>
+                    </div>
+                  </div>
+                  <p className={s.chatBubble} data-chat-message>
+                    Hey! Is the desk lamp still available?
+                  </p>
+                  <p className={`${s.chatBubble} ${s.chatReply}`} data-chat-message>
+                    It is! Meet at SLC after class?
+                  </p>
+                  <p className={s.chatBubble} data-chat-message>
+                    Perfect. See you there!
+                  </p>
+                  <span className={s.chatRead} data-chat-receipt>
+                    <CheckCheck size={14} /> SLC. After class. Sorted.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className={s.storyCaption}>
+              <h3>A message. A meetup. Yours.</h3>
+              <p>Chat on Trovun and choose a familiar public spot to make the handoff.</p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
-  );
-}
-
-function MotionStory({ scene }: { scene: MotionScene }) {
-  return (
-    <figure
-      className={`um-motion-card um-motion-card--${scene.name} group relative min-w-0 overflow-hidden`}
-    >
-      <MotionFilm scene={scene.name} />
-
-      <figcaption className="um-motion-caption">
-        <span className="text-[1.03rem] font-semibold leading-6 tracking-[-0.012em] text-[#e9e4d9]">
-          {scene.caption}
-        </span>
-      </figcaption>
-    </figure>
-  );
-}
-
-function MotionFilm({ scene }: { scene: MotionSceneName }) {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [motionPreference, setMotionPreference] = useState<MotionPreference>('pending');
-  const [sourceIsAttached, setSourceIsAttached] = useState(false);
-  const [stageIsVisible, setStageIsVisible] = useState(false);
-  const [pageIsVisible, setPageIsVisible] = useState(true);
-  const [videoHasDecodedFrame, setVideoHasDecodedFrame] = useState(false);
-
-  const poster = `/motion/${scene}-poster.webp`;
-  const video = `/motion/${scene}.webm`;
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const syncPreference = () => {
-      if (query.matches) {
-        setVideoHasDecodedFrame(false);
-      }
-
-      setMotionPreference(query.matches ? 'reduce' : 'allow');
-    };
-
-    syncPreference();
-    query.addEventListener('change', syncPreference);
-
-    return () => query.removeEventListener('change', syncPreference);
-  }, []);
-
-  useEffect(() => {
-    const syncPageVisibility = () => setPageIsVisible(document.visibilityState === 'visible');
-
-    syncPageVisibility();
-    document.addEventListener('visibilitychange', syncPageVisibility);
-
-    return () => document.removeEventListener('visibilitychange', syncPageVisibility);
-  }, []);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage || motionPreference !== 'allow') return;
-
-    const preloadObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-
-        setSourceIsAttached(true);
-        preloadObserver.disconnect();
-      },
-      {
-        rootMargin: '480px 0px',
-        threshold: 0,
-      },
-    );
-
-    preloadObserver.observe(stage);
-
-    return () => preloadObserver.disconnect();
-  }, [motionPreference]);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage || motionPreference !== 'allow') {
-      setStageIsVisible(false);
-      return;
-    }
-
-    const playbackObserver = new IntersectionObserver(
-      ([entry]) => {
-        setStageIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.18);
-      },
-      {
-        threshold: [0, 0.18, 0.5],
-      },
-    );
-
-    playbackObserver.observe(stage);
-
-    return () => playbackObserver.disconnect();
-  }, [motionPreference]);
-
-  useEffect(() => {
-    if (!sourceIsAttached || motionPreference !== 'allow') return;
-
-    videoRef.current?.load();
-  }, [motionPreference, sourceIsAttached]);
-
-  useEffect(() => {
-    const element = videoRef.current;
-    if (!element) return;
-
-    if (!sourceIsAttached || motionPreference !== 'allow' || !stageIsVisible || !pageIsVisible) {
-      element.pause();
-      return;
-    }
-
-    let cancelled = false;
-    const play = () => {
-      if (cancelled) return;
-
-      void element.play().catch(() => {
-        // The poster remains visible if a browser declines programmatic playback.
-      });
-    };
-
-    if (element.readyState >= 2) {
-      play();
-    } else {
-      element.addEventListener('canplay', play, { once: true });
-    }
-
-    return () => {
-      cancelled = true;
-      element.removeEventListener('canplay', play);
-    };
-  }, [motionPreference, pageIsVisible, sourceIsAttached, stageIsVisible]);
-
-  return (
-    <div className={`um-motion-film-frame um-motion-film-frame--${scene}`} ref={stageRef}>
-      <Image
-        alt=""
-        aria-hidden="true"
-        className={`um-motion-film-poster object-cover ${
-          videoHasDecodedFrame ? 'um-motion-film-poster--video-ready' : ''
-        }`}
-        fill
-        priority={false}
-        sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-        src={poster}
-      />
-
-      {motionPreference === 'allow' ? (
-        <video
-          aria-hidden="true"
-          className={`um-motion-film ${videoHasDecodedFrame ? 'um-motion-film--ready' : ''}`}
-          controls={false}
-          disablePictureInPicture
-          loop
-          muted
-          onEmptied={() => setVideoHasDecodedFrame(false)}
-          onLoadedData={() => setVideoHasDecodedFrame(true)}
-          onPlaying={() => setVideoHasDecodedFrame(true)}
-          playsInline
-          preload="none"
-          ref={videoRef}
-          tabIndex={-1}
-        >
-          {sourceIsAttached ? <source src={video} type="video/webm" /> : null}
-        </video>
-      ) : null}
-    </div>
   );
 }

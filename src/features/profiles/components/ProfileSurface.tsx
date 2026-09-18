@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Mail, Plus, ShieldCheck, Store } from 'lucide-react';
 
@@ -13,27 +14,28 @@ import { WaterlooVerificationBadge } from './WaterlooVerificationBadge';
 type ProfileSurfaceProps = {
   profile: StudentProfileSurface;
   variant: 'public' | 'self';
+  notificationSettings?: ReactNode;
 };
 
-export function ProfileSurface({ profile, variant }: ProfileSurfaceProps) {
+export function ProfileSurface({ profile, variant, notificationSettings }: ProfileSurfaceProps) {
   const isSelf = variant === 'self';
   const canSell = profile.role === 'student';
   const listingCount = profile.listings.length;
-  const initials = getProfileInitials(profile.name) || 'UM';
+  const initials = getProfileInitials(profile.name) || 'T';
 
   return (
-    <div className="min-h-[calc(100vh-4.35rem)] bg-[#080c13] pb-24 text-um-text-strong lg:pb-28">
-      <section className="relative isolate overflow-hidden border-b border-white/[0.075] bg-[#070a0f]">
+    <div className="min-h-[calc(100vh-4rem)] pb-24 text-um-text-strong lg:pb-24">
+      <section className="relative isolate overflow-hidden border-b border-white/[0.07]">
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_17%_-20%,rgba(242,205,82,0.13),transparent_30rem),radial-gradient(circle_at_84%_120%,rgba(88,111,151,0.11),transparent_34rem)]"
+          className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_46%_80%_at_8%_0%,rgba(242,205,82,0.1),transparent_74%),radial-gradient(ellipse_52%_90%_at_92%_100%,rgba(65,101,154,0.11),transparent_76%)]"
         />
         <div
           aria-hidden="true"
-          className="absolute -right-24 top-1/2 -z-10 size-[25rem] -translate-y-1/2 rounded-full border border-um-gold-300/[0.055] opacity-80 sm:-right-12 sm:size-[32rem]"
+          className="absolute right-[8%] top-0 -z-10 h-px w-48 bg-gradient-to-r from-transparent via-um-gold-300/30 to-transparent"
         />
 
-        <div className="mx-auto max-w-um-content px-4 pb-10 pt-6 sm:px-6 sm:pb-12 sm:pt-8 lg:px-8 lg:pb-14">
+        <div className="mx-auto max-w-um-content px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7 lg:px-8">
           <Link
             className="inline-flex min-h-10 items-center gap-2 rounded-full px-2 text-xs font-semibold text-white/46 transition-colors duration-200 hover:bg-white/[0.045] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-300"
             href="/marketplace"
@@ -42,13 +44,13 @@ export function ProfileSurface({ profile, variant }: ProfileSurfaceProps) {
             Marketplace
           </Link>
 
-          <div className="mt-7 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
+          <div className="mt-5 grid items-end gap-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
             <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
               <div className="w-fit shrink-0">
                 <div className="relative w-fit">
                   <ProfileAvatar
                     avatarUrl={profile.avatarUrl}
-                    className="size-[5.75rem] text-2xl sm:size-[6.75rem] sm:text-[1.8rem]"
+                    className="size-[4.75rem] text-xl sm:size-[5.5rem] sm:text-2xl"
                     initials={initials}
                     name={profile.name}
                   />
@@ -67,7 +69,7 @@ export function ProfileSurface({ profile, variant }: ProfileSurfaceProps) {
 
               <div className="min-w-0">
                 <div className="flex min-w-0 flex-wrap items-center gap-2.5">
-                  <h1 className="max-w-full break-words pb-[0.08em] text-[clamp(2.15rem,4.5vw,4rem)] font-bold leading-[1.03] tracking-[-0.048em] text-[#f3efe7] [overflow-wrap:anywhere]">
+                  <h1 className="max-w-full break-words pb-[0.08em] text-[clamp(1.9rem,4vw,3.25rem)] font-bold leading-[1.04] tracking-[-0.043em] text-[#f3efe7] [overflow-wrap:anywhere]">
                     {profile.name}
                   </h1>
                   {profile.role === 'moderator' ? (
@@ -101,24 +103,25 @@ export function ProfileSurface({ profile, variant }: ProfileSurfaceProps) {
             ) : null}
           </div>
 
-          <dl className="mt-9 grid max-w-2xl grid-cols-2 divide-x divide-white/[0.08] border-y border-white/[0.08] sm:mt-11">
-            <ProfileStat label="Joined" value={formatProfileJoinedDate(profile.joinedAt)} />
+          <dl className="mt-7 grid max-w-xl grid-cols-2 divide-x divide-white/[0.08] border-t border-white/[0.08] sm:mt-8">
+            {profile.joinedAt ? (
+              <ProfileStat label="Joined" value={formatProfileJoinedDate(profile.joinedAt)} />
+            ) : null}
             <ProfileStat label="Rating" value="No ratings yet" />
           </dl>
         </div>
       </section>
 
+      {isSelf ? notificationSettings : null}
+
       <section
         aria-labelledby="profile-listings-heading"
-        className="mx-auto max-w-um-content px-4 pt-10 sm:px-6 sm:pt-12 lg:px-8 lg:pt-14"
+        className="mx-auto max-w-um-content px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8 lg:pt-11"
       >
-        <div className="mb-7 flex items-end justify-between gap-4 border-b border-white/[0.075] pb-5 sm:mb-8">
+        <div className="mb-5 flex items-end justify-between gap-4 sm:mb-6">
           <div>
-            <p className="font-condensed text-[0.62rem] font-bold uppercase tracking-[0.18em] text-um-gold-300/70">
-              On UniMarket
-            </p>
             <h2
-              className="mt-1.5 text-[1.8rem] font-bold tracking-[-0.042em] text-[#f0ece4] sm:text-[2.2rem]"
+              className="text-[1.55rem] font-bold tracking-[-0.035em] text-[#f0ece4] sm:text-[1.85rem]"
               id="profile-listings-heading"
             >
               Active listings
