@@ -51,9 +51,9 @@ export default async function HomePage() {
             url: SITE_URL,
             logo: {
               '@type': 'ImageObject',
-              url: absoluteUrl('/brand/trovun-mark.svg'),
-              width: 1024,
-              height: 1024,
+              url: absoluteUrl('/brand/trovun-mark.png'),
+              width: 512,
+              height: 512,
             },
             description:
               'An independent student-built marketplace for the University of Waterloo community.',

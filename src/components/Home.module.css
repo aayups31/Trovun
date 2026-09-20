@@ -116,6 +116,7 @@
   transform: translate(2px, -2px);
 }
 .navigation {
+  padding-top: env(safe-area-inset-top, 0px);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -128,6 +129,14 @@
   height: 80px;
   gap: 36px;
   align-items: center;
+}
+.homeBrand {
+  flex-shrink: 0;
+}
+.homeBrand > span:last-child > span:first-child {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
 }
 .navLinks {
   display: flex;
@@ -1407,7 +1416,7 @@
 }
 .heroGrid {
   display: flex;
-  min-height: max(660px, calc(100svh - 155px));
+  min-height: clamp(660px, calc(100svh - 155px), 960px);
   padding-block: 80px 60px;
 }
 .heroCopy {

@@ -1113,7 +1113,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
         </div>
       ) : null}
 
-      <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-y border-white/10 bg-um-ink-950/[0.97] px-3 py-2.5 shadow-[0_-12px_32px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-5 lg:hidden">
+      <div className="fixed inset-x-0 bottom-[var(--um-mobile-nav-height)] z-40 border-y border-white/10 bg-um-ink-950/[0.97] px-3 py-2.5 shadow-[0_-12px_32px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-5 lg:hidden">
         <div className="mx-auto max-w-xl">
           <p
             aria-live="polite"

@@ -145,7 +145,9 @@
 @media (hover: hover) and (pointer: fine) {
   .um-market-reel__card:hover {
     border-color: rgba(242, 213, 111, 0.42);
-    box-shadow: 0 30px 82px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(242, 213, 111, 0.08);
+    box-shadow:
+      0 30px 82px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(242, 213, 111, 0.08);
   }
 }
 
@@ -203,14 +205,17 @@
 }
 
 html {
+  --um-mobile-nav-height: calc(3.5rem + 1px + env(safe-area-inset-bottom, 0px));
   position: relative;
   scroll-behavior: smooth;
   background: var(--um-canvas);
   text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
   background: var(--um-canvas);
   color: var(--um-text-strong);
@@ -716,6 +721,7 @@ svg {
    behind every product route so the app reads as one place instead of stacked pages. */
 .um-product-dark {
   --um-canvas: #070b12;
+  min-height: 100svh;
   --um-canvas-soft: #0a111c;
   --um-surface: #0d1520;
   --um-surface-warm: #121d2a;
@@ -725,6 +731,39 @@ svg {
   position: relative;
   isolation: isolate;
   background: #070b12;
+}
+
+.um-mobile-tab-bar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+  padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+}
+
+@media (max-width: 1023px) {
+  .um-product-header,
+  .um-auth-dark {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+@media (max-width: 639px) {
+  .um-messages-dock {
+    top: var(--messages-top, 0px);
+    bottom: auto;
+    height: var(--messages-height, 100dvh);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+}
+
+@media (max-width: 1023px) and (pointer: coarse) {
+  /* iOS zooms focused controls smaller than 16px. Keep user zoom available. */
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 .um-product-atmosphere {
@@ -746,12 +785,7 @@ svg {
   content: '';
   opacity: 0.32;
   background:
-    linear-gradient(
-      90deg,
-      transparent 0 67.9%,
-      rgb(231 188 53 / 13%) 68%,
-      transparent 68.13% 100%
-    ),
+    linear-gradient(90deg, transparent 0 67.9%, rgb(231 188 53 / 13%) 68%, transparent 68.13% 100%),
     linear-gradient(
       180deg,
       transparent 0 17.9%,
@@ -861,7 +895,9 @@ svg {
   border-radius: 999px;
   background: radial-gradient(circle, rgb(72 118 175 / 10%), transparent 69%);
   opacity: 0.75;
-  transition: opacity 420ms var(--um-ease-out), transform 560ms var(--um-ease-out);
+  transition:
+    opacity 420ms var(--um-ease-out),
+    transform 560ms var(--um-ease-out);
 }
 
 .um-listing-card:hover::before {
@@ -1192,7 +1228,17 @@ svg {
  */
 @media (min-width: 1024px) {
   .um-auth-dark .um-auth-layout-grid {
-    grid-template-columns: minmax(27rem, 0.82fr) minmax(34rem, 1fr);
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+  }
+
+  .um-auth-form-stage {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+
+  .um-auth-form-stage > div,
+  .um-auth-form-stage > footer {
+    flex-shrink: 0;
   }
 
   .um-auth-dark .um-warrior-campaign:not(.um-warrior-campaign--compact) {
@@ -1545,42 +1591,184 @@ svg {
   border-color: rgb(213 226 224 / 9%);
   box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
 }
-.um-find-card::before, .um-find-card::after { display: none; }
-.um-find-card:hover { border-color: rgb(240 212 119 / 30%); box-shadow: 0 18px 36px rgb(0 0 0 / 17%); }
-.um-sell-workspace { background: radial-gradient(ellipse 60% 25% at 80% 0%, #1b302a30, transparent); }
-.um-sell-workspace .um-sell-section { background: #121d25; border-color: #ffffff13; box-shadow: 0 20px 55px #00000012; }
-.um-sell-workspace [data-sell-step][hidden] { display: none !important; }
-.um-sell-workspace [data-sell-step]:not([hidden]) { animation: sell-step-enter .55s cubic-bezier(.22,.65,.3,1) both; }
-.um-sell-steps { display: grid; grid-template-columns: repeat(4,1fr); border-bottom: 1px solid #ffffff16; gap: 20px; }
-.um-sell-steps button { display: flex; align-items: center; gap: 10px; padding: 16px 0; width: 100%; text-align: left; font-size: 13px; font-weight: 600; color: #7e8f97; border-bottom: 2px solid transparent; transition: color .3s,border-color .3s; }
-.um-sell-steps button span { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #ffffff20; border-radius: 50%; font-size: 10px; font-weight: 500; }
-.um-sell-steps button[aria-current] { color: #eed17a; border-color: #eed17a; }
-.um-sell-steps button[aria-current] span { background: #eed17a; color: #142027; border-color: transparent; }
-.um-sell-steps button:hover { color: #f3efe6; }
-.um-sell-steps button:focus-visible { outline: 2px solid #eed17a; outline-offset: -2px; border-radius: 4px; }
-.um-step-summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 0 6px 4px; }
-.um-step-summary p { color: #ddc16d; font-size: 11px; font-weight: 600; }
-.um-step-summary p span { color: #798e99; }
-.um-step-summary > button { min-height: 36px; }
-.um-step-summary > button:focus-visible { outline: 2px solid #eed17a; outline-offset: 4px; }
-.um-photo-tips { display: grid; gap: 12px; padding: 24px 8px 4px; color: #899aa3; font-size: 12px; line-height: 1.6; }
-.um-photo-tips strong { font-weight: 500; color: #d7ddd9; }
-.um-step-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ffffff12; padding: 20px 4px; }
-.um-review-details { margin-top: 24px; }
-.um-review-details > div { display: grid; grid-template-columns: 140px 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid #ffffff12; font-size: 13px; }
-.um-review-details dt { color: #92a1a5; }
-.um-review-details dd { color: #e9e8dc; overflow-wrap: anywhere; }
-.um-review-details button { float: right; margin-left: 12px; color: #eed17a; font-size: 11px; padding: 3px 0 3px 8px; }
-.um-review-details button:focus-visible { outline: 2px solid #eed17a; outline-offset: 4px; }
-@keyframes sell-step-enter { from { opacity: .25; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@media(max-width:639px) {
-  .um-sell-steps { gap: 10px; }
-  .um-sell-steps button { flex-direction: column; align-items: flex-start; gap: 8px; font-size: 11px; }
-  .um-review-details > div { grid-template-columns: 1fr; gap: 6px; }
-  .um-sell-workspace header h1 { font-size: 35px; }
-  .um-sell-workspace .um-sell-section { padding: 24px 20px; border-radius: 16px; }
+.um-find-card::before,
+.um-find-card::after {
+  display: none;
 }
-@media(prefers-reduced-motion:reduce) {
-  .um-sell-workspace [data-sell-step]:not([hidden]) { animation: none; }
-  .um-find-card, .um-find-card img { transition: none; }
+.um-find-card:hover {
+  border-color: rgb(240 212 119 / 30%);
+  box-shadow: 0 18px 36px rgb(0 0 0 / 17%);
+}
+.um-sell-workspace {
+  background: radial-gradient(ellipse 60% 25% at 80% 0%, #1b302a30, transparent);
+}
+.um-sell-workspace .um-sell-section {
+  background: #121d25;
+  border-color: #ffffff13;
+  box-shadow: 0 20px 55px #00000012;
+}
+.um-sell-workspace [data-sell-step][hidden] {
+  display: none !important;
+}
+.um-sell-workspace [data-sell-step]:not([hidden]) {
+  animation: sell-step-enter 0.55s cubic-bezier(0.22, 0.65, 0.3, 1) both;
+}
+.um-sell-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #ffffff16;
+  gap: 20px;
+}
+.um-sell-steps button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7e8f97;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.3s,
+    border-color 0.3s;
+}
+.um-sell-steps button span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 500;
+}
+.um-sell-steps button[aria-current] {
+  color: #eed17a;
+  border-color: #eed17a;
+}
+.um-sell-steps button[aria-current] span {
+  background: #eed17a;
+  color: #142027;
+  border-color: transparent;
+}
+.um-sell-steps button:hover {
+  color: #f3efe6;
+}
+.um-sell-steps button:focus-visible {
+  outline: 2px solid #eed17a;
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+.um-step-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 0 6px 4px;
+}
+.um-step-summary p {
+  color: #ddc16d;
+  font-size: 11px;
+  font-weight: 600;
+}
+.um-step-summary p span {
+  color: #798e99;
+}
+.um-step-summary > button {
+  min-height: 36px;
+}
+.um-step-summary > button:focus-visible {
+  outline: 2px solid #eed17a;
+  outline-offset: 4px;
+}
+.um-photo-tips {
+  display: grid;
+  gap: 12px;
+  padding: 24px 8px 4px;
+  color: #899aa3;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.um-photo-tips strong {
+  font-weight: 500;
+  color: #d7ddd9;
+}
+.um-step-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ffffff12;
+  padding: 20px 4px;
+}
+.um-review-details {
+  margin-top: 24px;
+}
+.um-review-details > div {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid #ffffff12;
+  font-size: 13px;
+}
+.um-review-details dt {
+  color: #92a1a5;
+}
+.um-review-details dd {
+  color: #e9e8dc;
+  overflow-wrap: anywhere;
+}
+.um-review-details button {
+  float: right;
+  margin-left: 12px;
+  color: #eed17a;
+  font-size: 11px;
+  padding: 3px 0 3px 8px;
+}
+.um-review-details button:focus-visible {
+  outline: 2px solid #eed17a;
+  outline-offset: 4px;
+}
+@keyframes sell-step-enter {
+  from {
+    opacity: 0.25;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 639px) {
+  .um-sell-steps {
+    gap: 10px;
+  }
+  .um-sell-steps button {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .um-review-details > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .um-sell-workspace header h1 {
+    font-size: 35px;
+  }
+  .um-sell-workspace .um-sell-section {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .um-sell-workspace [data-sell-step]:not([hidden]) {
+    animation: none;
+  }
+  .um-find-card,
+  .um-find-card img {
+    transition: none;
+  }
 }

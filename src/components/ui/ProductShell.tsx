@@ -93,7 +93,11 @@ export function ProductShell({ avatarUrl, canSell, children, fullName, role }: P
         </div>
       </header>
 
-      <main className="relative pb-20 lg:pb-0" id="main-content" tabIndex={-1}>
+      <main
+        className="relative pb-[var(--um-mobile-nav-height)] lg:pb-0"
+        id="main-content"
+        tabIndex={-1}
+      >
         <ProductPageMotion />
         {children}
       </main>

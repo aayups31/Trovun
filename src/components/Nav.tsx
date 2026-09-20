@@ -7,7 +7,7 @@ export function Nav() {
   return (
     <header className={s.navigation}>
       <nav className={`${s.wrap} ${s.navInner}`} aria-label="Public navigation">
-        <BrandMark tone="light" showCampusLabel={false} />
+        <BrandMark className={s.homeBrand} tone="light" showCampusLabel={false} />
         <div className={s.navLinks}>
           <a href="#why-waterloo">The marketplace</a>
           <a href="#how-it-works">How it works</a>

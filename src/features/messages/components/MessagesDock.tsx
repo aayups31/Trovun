@@ -58,6 +58,25 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
   const threadRequestRef = useRef(0);
   const threadEndRef = useRef<HTMLDivElement | null>(null);
   const lastScrolledMessageIdRef = useRef<string | null>(null);
+  const dockRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open || !window.visualViewport) return;
+    const viewport = window.visualViewport;
+    const syncViewport = () => {
+      // Track the keyboard without fighting intentional pinch zoom.
+      if (viewport.scale !== 1) return;
+      dockRef.current?.style.setProperty('--messages-height', `${viewport.height}px`);
+      dockRef.current?.style.setProperty('--messages-top', `${viewport.offsetTop}px`);
+    };
+    syncViewport();
+    viewport.addEventListener('resize', syncViewport);
+    viewport.addEventListener('scroll', syncViewport);
+    return () => {
+      viewport.removeEventListener('resize', syncViewport);
+      viewport.removeEventListener('scroll', syncViewport);
+    };
+  }, [open]);
 
   const activeConversation = useMemo(
     () => conversations.find((conversation) => conversation.id === activeId) ?? null,
@@ -169,7 +188,10 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
     window.addEventListener(OPEN_MESSAGES_EVENT, handleOpen);
     if (window.location.pathname === '/messages') {
       const requested = new URLSearchParams(window.location.search).get('conversation');
-      if (requested && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requested)) {
+      if (
+        requested &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requested)
+      ) {
         handleOpen(new CustomEvent(OPEN_MESSAGES_EVENT, { detail: { conversationId: requested } }));
       }
     }
@@ -228,7 +250,8 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
     if (!lastMessageId || lastMessageId === lastScrolledMessageIdRef.current) return;
     const behavior = lastScrolledMessageIdRef.current ? 'smooth' : 'auto';
     lastScrolledMessageIdRef.current = lastMessageId;
-    threadEndRef.current?.scrollIntoView({ block: 'end', behavior });
+    const scroller = threadEndRef.current?.parentElement;
+    scroller?.scrollTo({ top: scroller.scrollHeight, behavior });
   }, [messages, open]);
 
   const chooseConversation = (conversationId: string) => {
@@ -268,8 +291,9 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[70] bg-[#02050a]/72 backdrop-blur-[5px] data-[state=closed]:animate-out data-[state=open]:animate-in" />
         <Dialog.Content
+          ref={dockRef}
           aria-describedby={undefined}
-          className="fixed inset-0 z-[80] overflow-hidden border-white/[0.09] bg-[#07101a]/96 text-white shadow-[0_40px_120px_rgba(0,0,0,0.58)] focus:outline-none sm:inset-y-4 sm:left-auto sm:right-4 sm:w-[min(58rem,calc(100vw-2rem))] sm:rounded-[1.35rem] sm:border"
+          className="um-messages-dock fixed inset-0 z-[80] overflow-hidden border-white/[0.09] bg-[#07101a]/96 text-white shadow-[0_40px_120px_rgba(0,0,0,0.58)] focus:outline-none sm:inset-y-4 sm:left-auto sm:right-4 sm:w-[min(58rem,calc(100vw-2rem))] sm:rounded-[1.35rem] sm:border"
         >
           <Dialog.Title className="sr-only">Messages</Dialog.Title>
           <div className="grid h-full min-h-0 sm:grid-cols-[19rem_minmax(0,1fr)]">
@@ -294,7 +318,7 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
                 </Dialog.Close>
               </div>
 
-              <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2.5">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-2.5">
                 {inboxLoading && conversations.length === 0 ? <InboxSkeleton /> : null}
                 {inboxError && conversations.length === 0 ? (
                   <CompactNotice>{inboxError}</CompactNotice>
@@ -340,7 +364,7 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
                     onBack={() => setMobileListVisible(true)}
                     onNavigate={() => setOpen(false)}
                   />
-                  <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-7">
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-7">
                     {threadLoading ? <ThreadSkeleton /> : null}
                     {threadError && messages.length === 0 ? (
                       <CompactNotice>{threadError}</CompactNotice>
@@ -657,8 +681,7 @@ function MessageComposer({
           Message
         </label>
         <textarea
-          autoFocus
-          className="max-h-32 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-3 py-2 text-sm leading-5 text-white outline-none placeholder:text-white/30"
+          className="max-h-32 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-3 py-2 text-base leading-6 text-white outline-none placeholder:text-white/30 sm:text-sm"
           id="message-composer"
           maxLength={2000}
           onChange={(event) => setBody(event.target.value)}

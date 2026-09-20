@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               <p className="text-xs font-medium text-um-text-muted">Private marketplace</p>
             </div>
 
-            <div className="mx-auto flex min-h-0 w-full max-w-lg flex-1 items-center py-5 lg:py-4">
+            <div className="mx-auto my-auto flex w-full max-w-lg shrink-0 items-center py-5 lg:py-4">
               <div className="um-auth-form-card um-fade-up w-full">{children}</div>
             </div>
 

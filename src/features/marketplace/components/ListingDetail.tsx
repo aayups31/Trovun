@@ -166,7 +166,7 @@ export function ListingDetail({
       </div>
 
       {!isOwner && canMessage ? (
-        <div className="fixed inset-x-3 bottom-[5.05rem] z-30 lg:hidden">
+        <div className="fixed inset-x-3 bottom-[calc(var(--um-mobile-nav-height)+0.75rem)] z-30 lg:hidden">
           <div className="mx-auto max-w-lg rounded-[0.9rem] border border-white/[0.1] bg-[#0a111b]/94 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.38)] backdrop-blur-xl">
             <MessageSellerButton listingId={listing.id} />
           </div>

@@ -200,10 +200,10 @@ export function MobileTabBar({ canSell, isModerator }: ProductNavigationProps) {
   return (
     <nav
       aria-label="Mobile primary"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.09] bg-[#070b12]/92 px-3 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-18px_50px_rgba(0,0,0,0.2)] backdrop-blur-2xl lg:hidden"
+      className="um-mobile-tab-bar fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.09] bg-[#070b12] px-3 lg:hidden"
     >
       <div
-        className="mx-auto grid max-w-md gap-1"
+        className="mx-auto grid h-14 max-w-md gap-1"
         style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
       >
         {items.map((item) => {
