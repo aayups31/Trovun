@@ -133,8 +133,8 @@ export default function WaterlooMarketplacePage() {
       <section className="relative isolate overflow-hidden border-b border-white/[0.08]">
         <div aria-hidden="true" className="um-public-hero-field absolute inset-0 -z-20" />
 
-        <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[92rem] lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:px-12 xl:px-16">
+        <div className="um-public-hero-grid grid min-h-[calc(100svh-4.5rem)] lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="um-public-hero-copy flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:px-12 xl:px-16">
             <div className="max-w-[42rem]">
               <div className="flex items-center gap-3 text-[0.68rem] font-semibold uppercase tracking-[0.19em] text-um-gold-300">
                 <span aria-hidden="true" className="size-1.5 rounded-full bg-um-gold-300" />
@@ -186,7 +186,7 @@ export default function WaterlooMarketplacePage() {
               className="object-cover object-[54%_48%]"
               fill
               priority
-              quality={92}
+              quality={84}
               sizes="(max-width: 1024px) 100vw, 55vw"
               src="/waterloo/campus-aerial-restored.webp"
             />

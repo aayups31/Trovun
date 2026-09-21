@@ -260,15 +260,18 @@ export function MarketingScrollMotion() {
       };
     }
 
-    // Yield the initial render and input handling before loading enhancement code.
-    const timer = window.setTimeout(() => {
+    // Keep the animation bundle out of the critical rendering path.
+    const begin = () => {
       void start().catch(() => {
         cleanup?.();
       });
-    }, 120);
+    };
+    const idleCallback = window.requestIdleCallback?.(begin, { timeout: 900 });
+    const timer = idleCallback === undefined ? window.setTimeout(begin, 240) : undefined;
     return () => {
       disposed = true;
-      window.clearTimeout(timer);
+      if (idleCallback !== undefined) window.cancelIdleCallback?.(idleCallback);
+      if (timer !== undefined) window.clearTimeout(timer);
       cleanup?.();
     };
   }, []);

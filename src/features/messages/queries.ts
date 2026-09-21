@@ -6,7 +6,12 @@ import { getViewer } from '@/lib/auth/session';
 import type { Message, Tables } from '@/lib/supabase/database.types';
 import { createClient } from '@/lib/supabase/server';
 
-import { conversationIdSchema, listingConversationSchema, sendMessageSchema } from './schemas';
+import {
+  conversationIdSchema,
+  listingConversationSchema,
+  sellerRatingSchema,
+  sendMessageSchema,
+} from './schemas';
 import type { ConversationMessage, ConversationSummary } from './types';
 
 const LISTING_IMAGE_BUCKET = 'listing-images';
@@ -175,6 +180,33 @@ export async function markMessageConversationRead(conversationId: unknown): Prom
   return data;
 }
 
+export async function rateConversationSeller(
+  conversationId: unknown,
+  input: unknown,
+): Promise<number> {
+  await requireMessagingViewer();
+  const parsedId = conversationIdSchema.safeParse(conversationId);
+  if (!parsedId.success) throw new MessagingRequestError(400, parsedId.error.issues[0].message);
+  const parsedRating = sellerRatingSchema.safeParse(input);
+  if (!parsedRating.success) {
+    throw new MessagingRequestError(400, 'Choose a rating from one to five.');
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc('rate_seller', {
+    p_conversation_id: parsedId.data,
+    p_rating: parsedRating.data.rating,
+  });
+
+  if (error || !data) {
+    throw error
+      ? mapSupabaseError(error, 'Unable to save that rating.')
+      : new MessagingRequestError(500, 'Unable to save that rating.');
+  }
+
+  return Number(data);
+}
+
 async function requireMessagingViewer() {
   const viewer = await getViewer();
   if (!viewer) throw new MessagingRequestError(401, 'Sign in to view messages.');
@@ -235,6 +267,7 @@ function mapConversation(
     counterpartId: row.counterpart_id,
     counterpartName: row.counterpart_name,
     participantRole: row.seller_id === viewerId ? 'seller' : 'buyer',
+    sellerRating: row.seller_rating === null ? null : Number(row.seller_rating),
     lastMessage,
     lastMessageBody: lastMessage?.body ?? null,
     lastMessageSenderId: lastMessage?.senderId ?? null,

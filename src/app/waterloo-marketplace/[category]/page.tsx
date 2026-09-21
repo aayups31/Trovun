@@ -114,8 +114,8 @@ export default async function CategorySearchPage({ params }: CategoryPageProps) 
 
       <section className="relative isolate overflow-hidden border-b border-white/[0.08]">
         <div aria-hidden="true" className="um-public-hero-field absolute inset-0 -z-20" />
-        <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[92rem] lg:grid-cols-[0.86fr_1.14fr]">
-          <div className="flex items-center px-5 py-14 sm:px-8 sm:py-20 lg:px-12 xl:px-16">
+        <div className="um-public-hero-grid grid min-h-[calc(100svh-4.5rem)] lg:grid-cols-[0.86fr_1.14fr]">
+          <div className="um-public-hero-copy flex items-center px-5 py-14 sm:px-8 sm:py-20 lg:px-12 xl:px-16">
             <div className="w-full max-w-[40rem]">
               <Link
                 className="group inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/46 transition hover:text-white"
@@ -163,7 +163,7 @@ export default async function CategorySearchPage({ params }: CategoryPageProps) 
               className="object-cover"
               fill
               priority
-              quality={92}
+              quality={84}
               sizes="(max-width: 1024px) 100vw, 58vw"
               src={category.image}
               style={{ objectPosition: category.imagePosition }}

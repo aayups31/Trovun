@@ -10,10 +10,10 @@ export function TrovunGlyph({ className }: TrovunGlyphProps) {
     <Image
       aria-hidden="true"
       alt=""
-      src="/brand/trovun-mark.png"
-      width={512}
-      height={512}
-      unoptimized
+      src="/brand/trovun-logo-no-background.png"
+      width={96}
+      height={94}
+      sizes="48px"
       className={cn('shrink-0 object-contain', className)}
     />
   );

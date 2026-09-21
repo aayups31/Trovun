@@ -12,5 +12,7 @@ export type StudentProfileSurface = {
   joinedAt: string | null;
   verified: boolean;
   role: 'student' | 'moderator';
+  ratingAverage: number | null;
+  ratingCount: number;
   listings: MarketplaceListing[];
 };

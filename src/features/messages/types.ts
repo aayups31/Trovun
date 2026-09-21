@@ -16,6 +16,7 @@ export type ConversationSummary = {
   counterpartId: string;
   counterpartName: string;
   participantRole: 'buyer' | 'seller';
+  sellerRating: number | null;
   lastMessage: ConversationLastMessage | null;
   lastMessageBody: string | null;
   lastMessageSenderId: string | null;

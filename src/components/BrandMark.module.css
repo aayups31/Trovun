@@ -1,0 +1,102 @@
+.brand {
+  --brand-ink: #111720;
+  --brand-subtle: #686a6d;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.light {
+  --brand-ink: #f8f4e9;
+  --brand-subtle: rgb(255 255 255 / 48%);
+}
+
+.logoStage {
+  position: relative;
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  place-items: center;
+}
+
+.glyph {
+  position: relative;
+  z-index: 1;
+  width: 2.15rem;
+  height: 2.15rem;
+  filter: drop-shadow(0 7px 14px rgb(224 171 48 / 18%));
+  transition:
+    filter 300ms ease,
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outline {
+  position: absolute;
+  inset: -0.2rem;
+  width: calc(100% + 0.4rem);
+  height: calc(100% + 0.4rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.outlinePath {
+  fill: none;
+  stroke: #edce79;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 196;
+  stroke-dashoffset: 196;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgb(237 206 121 / 28%));
+  transition:
+    stroke-dashoffset 720ms cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 180ms ease;
+}
+
+.brand:hover .outlinePath,
+.brand:focus-visible .outlinePath {
+  stroke-dashoffset: 0;
+  opacity: 0.9;
+}
+
+.brand:hover .glyph,
+.brand:focus-visible .glyph {
+  filter: drop-shadow(0 8px 17px rgb(224 171 48 / 28%));
+  transform: scale(0.88);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.wordmark {
+  color: var(--brand-ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 8px 24px rgb(0 0 0 / 9%);
+}
+
+.campusLabel {
+  margin-top: 0.38rem;
+  color: var(--brand-subtle);
+  font-family: var(--font-barlow), sans-serif;
+  font-size: 0.59rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph,
+  .outlinePath {
+    transition-duration: 0.01ms;
+  }
+}

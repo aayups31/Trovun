@@ -6,7 +6,8 @@ import {
   closestCenter,
   DndContext,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -19,7 +20,16 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { CheckCircle2, GripVertical, ImagePlus, Loader2, RotateCcw, Trash2 } from 'lucide-react';
+import {
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  GripVertical,
+  ImagePlus,
+  Loader2,
+  RotateCcw,
+  Trash2,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   finalizeListingImageAction,
@@ -77,7 +87,8 @@ export function ImageUploader({
   const uploadJobsRef = useRef(new Map<string, UploadJob>());
   const uploadQueueRef = useRef<Promise<void>>(Promise.resolve());
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -458,11 +469,9 @@ export function ImageUploader({
     [enqueueUpload, updateImages],
   );
 
-  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
-    if (!over || active.id === over.id) return;
+  const saveImageOrder = async (oldIndex: number, newIndex: number) => {
     const currentImages = imagesRef.current;
-    const oldIndex = currentImages.findIndex((image) => image.id === active.id);
-    const newIndex = currentImages.findIndex((image) => image.id === over.id);
+    if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return;
     const previousOrder = currentImages.map((image) => image.id);
     const next = arrayMove(currentImages, oldIndex, newIndex);
     updateImages(() => next);
@@ -491,7 +500,20 @@ export function ImageUploader({
     }
   };
 
-  // Drag-and-drop reordering handled via dnd-kit; arrow/cover/crop controls removed.
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+    const currentImages = imagesRef.current;
+    void saveImageOrder(
+      currentImages.findIndex((image) => image.id === active.id),
+      currentImages.findIndex((image) => image.id === over.id),
+    );
+  };
+
+  const moveImage = (imageId: string, direction: -1 | 1) => {
+    const currentImages = imagesRef.current;
+    const currentIndex = currentImages.findIndex((image) => image.id === imageId);
+    void saveImageOrder(currentIndex, currentIndex + direction);
+  };
 
   const removeImage = async (image: ComposerImage) => {
     cancelledUploadsRef.current.add(image.id);
@@ -572,7 +594,7 @@ export function ImageUploader({
       ? `${failedCount} photo${failedCount === 1 ? ' needs' : 's need'} attention. Retry or remove the failed photo${failedCount === 1 ? '' : 's'} before publishing.`
       : isWaitingForUpload
         ? 'Finishing your photo upload… keep this page open until it is ready.'
-        : 'JPEG, PNG, or WebP · up to 5 MB each · drag to reorder · the first photo is the cover';
+        : 'JPEG, PNG, or WebP · up to 5 MB each · drag or use the arrows to reorder · the first photo is the cover';
   return (
     <section
       id="images"
@@ -689,6 +711,9 @@ export function ImageUploader({
                     image={image}
                     index={index}
                     canRetry={image.url.startsWith('blob:')}
+                    canMoveNext={index < images.length - 1}
+                    canMovePrevious={index > 0}
+                    onMove={(direction) => moveImage(image.id, direction)}
                     onRemove={removeImage}
                     onRetry={retryImage}
                   />
@@ -745,12 +770,18 @@ function SortableImage({
   image,
   index,
   canRetry,
+  canMoveNext,
+  canMovePrevious,
+  onMove,
   onRemove,
   onRetry,
 }: {
   image: ComposerImage;
   index: number;
   canRetry: boolean;
+  canMoveNext: boolean;
+  canMovePrevious: boolean;
+  onMove: (direction: -1 | 1) => void;
   onRemove: (image: ComposerImage) => void;
   onRetry: (image: ComposerImage) => void;
 }) {
@@ -778,7 +809,7 @@ function SortableImage({
       {...safeListeners}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        'group relative aspect-[4/3] overflow-hidden rounded-um-sm bg-um-ink-800 shadow-um-xs ring-1 ring-white/[0.14]',
+        'group relative aspect-[4/3] touch-pan-y overflow-hidden rounded-um-sm bg-um-ink-800 shadow-um-xs ring-1 ring-white/[0.14]',
         isDragging && 'z-20 opacity-80 shadow-um-md',
         image.status === 'failed' && 'ring-2 ring-red-400/70',
       )}
@@ -855,7 +886,35 @@ function SortableImage({
             </span>
           </div>
         ) : (
-          <div className="flex items-center justify-end gap-1">
+          <div className="flex items-center justify-between gap-1">
+            <span className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onMove(-1);
+                }}
+                onPointerDown={(event) => event.stopPropagation()}
+                disabled={!canMovePrevious}
+                aria-label={`Move ${image.name} earlier`}
+                className="grid size-10 place-items-center rounded-um-sm bg-black/[0.55] text-white transition hover:bg-black/75 focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronLeft aria-hidden="true" className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onMove(1);
+                }}
+                onPointerDown={(event) => event.stopPropagation()}
+                disabled={!canMoveNext}
+                aria-label={`Move ${image.name} later`}
+                className="grid size-10 place-items-center rounded-um-sm bg-black/[0.55] text-white transition hover:bg-black/75 focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronRight aria-hidden="true" className="size-4" />
+              </button>
+            </span>
             <button
               type="button"
               onClick={() => onRemove(image)}

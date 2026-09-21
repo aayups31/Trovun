@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { TrovunGlyph } from '@/components/TrovunGlyph';
 import { cn } from '@/lib/utils';
 
+import styles from './BrandMark.module.css';
+
 type BrandMarkProps = {
   className?: string;
   href?: string;
@@ -23,33 +25,23 @@ export function BrandMark({
       aria-label={label}
       href={href}
       className={cn(
-        'group inline-flex min-h-11 items-center gap-3 rounded-sm font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-400',
+        styles.brand,
+        tone === 'light' && styles.light,
+        'group min-h-11 rounded-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-um-gold-400',
         className,
       )}
     >
-      <span
-        aria-hidden="true"
-        className="relative grid size-9 shrink-0 place-items-center text-um-gold-300 drop-shadow-[0_8px_18px_rgba(224,171,48,0.2)]"
-      >
-        <TrovunGlyph className="size-9" />
+      <span aria-hidden="true" className={styles.logoStage}>
+        <svg className={styles.outline} viewBox="0 0 64 64">
+          <path className={styles.outlinePath} pathLength="196" d="M8 8H56V20H39V56H25V20H8Z" />
+        </svg>
+        <TrovunGlyph className={styles.glyph} />
       </span>
 
-      <span className="flex flex-col leading-none">
-        <span
-          className={cn(
-            'text-[1.35rem] font-black tracking-[-0.035em] sm:text-[1.5rem]',
-            tone === 'light' ? 'text-um-text-inverse' : 'text-um-text-strong',
-          )}
-        >
-          Trovun
-        </span>
+      <span className={styles.copy}>
+        <span className={styles.wordmark}>Trovun</span>
         {showCampusLabel ? (
-          <span
-            className={cn(
-              'mt-1 hidden font-condensed text-[0.61rem] font-semibold uppercase tracking-[0.15em] sm:block',
-              tone === 'light' ? 'text-white/48' : 'text-um-text-muted',
-            )}
-          >
+          <span className={cn(styles.campusLabel, 'hidden sm:block')}>
             Waterloo marketplace
           </span>
         ) : null}

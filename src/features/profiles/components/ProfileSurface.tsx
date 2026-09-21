@@ -107,7 +107,14 @@ export function ProfileSurface({ profile, variant, notificationSettings }: Profi
             {profile.joinedAt ? (
               <ProfileStat label="Joined" value={formatProfileJoinedDate(profile.joinedAt)} />
             ) : null}
-            <ProfileStat label="Rating" value="No ratings yet" />
+            <ProfileStat
+              label="Rating"
+              value={
+                profile.ratingAverage === null || profile.ratingCount === 0
+                  ? 'No ratings yet'
+                  : `${profile.ratingAverage.toFixed(1)} / 5 · ${profile.ratingCount} ${profile.ratingCount === 1 ? 'rating' : 'ratings'}`
+              }
+            />
           </dl>
         </div>
       </section>

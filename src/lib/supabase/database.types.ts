@@ -392,6 +392,39 @@ export type Database = {
           },
         ];
       };
+      seller_ratings: {
+        Row: {
+          id: string;
+          listing_id: string;
+          conversation_id: string;
+          buyer_id: string;
+          seller_id: string;
+          rating: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          conversation_id: string;
+          buyer_id: string;
+          seller_id: string;
+          rating: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          conversation_id?: string;
+          buyer_id?: string;
+          seller_id?: string;
+          rating?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       moderation_events: {
         Row: ModerationEvent;
         Insert: {
@@ -442,6 +475,8 @@ export type Database = {
           university: string;
           created_at: string;
           avatar_path: string | null;
+          rating_average: number | null;
+          rating_count: number;
         };
         Relationships: [];
       };
@@ -493,6 +528,7 @@ export type Database = {
           last_message_at: string | null;
           created_at: string;
           updated_at: string;
+          seller_rating: number | null;
         };
         Relationships: [];
       };
@@ -525,6 +561,10 @@ export type Database = {
       mark_conversation_read: {
         Args: { p_conversation_id: string };
         Returns: string;
+      };
+      rate_seller: {
+        Args: { p_conversation_id: string; p_rating: number };
+        Returns: number;
       };
       publish_listing: {
         Args: { p_listing_id: string };

@@ -379,6 +379,17 @@ svg {
   background: #06080c;
 }
 
+/* Public hero photography stays full-bleed while copy follows the centered content rail. */
+.um-public-hero-grid {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .um-public-hero-copy {
+    padding-left: max(3rem, calc((100vw - 92rem) / 2 + 4rem));
+  }
+}
+
 .um-motion-line {
   padding-block: 0.035em 0.12em;
   margin-block: -0.035em -0.12em;

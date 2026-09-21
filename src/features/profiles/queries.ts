@@ -11,7 +11,8 @@ import type { StudentProfileSurface } from './types';
 
 const LISTING_IMAGE_BUCKET = 'listing-images';
 const PROFILE_IMAGE_BUCKET = 'profile-images';
-const PROFILE_COLUMNS = 'id,display_name,program,academic_year,university,created_at,avatar_path';
+const PROFILE_COLUMNS =
+  'id,display_name,program,academic_year,university,created_at,avatar_path,rating_average,rating_count';
 const PROFILE_LISTING_COLUMNS = [
   'id',
   'title',
@@ -81,6 +82,8 @@ export const getPublicStudentProfile = cache(async function getPublicStudentProf
       joinedAt: null,
       verified: false,
       role: 'student',
+      ratingAverage: null,
+      ratingCount: 0,
       listings,
     };
   }
@@ -99,15 +102,24 @@ export const getPublicStudentProfile = cache(async function getPublicStudentProf
     joinedAt: row.created_at,
     verified: true,
     role: 'student',
+    ratingAverage: row.rating_average === null ? null : Number(row.rating_average),
+    ratingCount: Number(row.rating_count ?? 0),
     listings,
   };
 });
 
 export async function getOwnProfileSurface(viewer: Viewer): Promise<StudentProfileSurface> {
   const supabase = await createClient();
-  const [listings, avatarUrl] = await Promise.all([
+  const [listings, avatarUrl, ratingResult] = await Promise.all([
     viewer.profile.role === 'student' ? loadActiveListings(supabase, viewer.id) : [],
     signProfileAvatar(supabase, viewer.profile.avatar_path),
+    viewer.profile.role === 'student'
+      ? supabase
+          .from('seller_profiles')
+          .select('rating_average,rating_count')
+          .eq('id', viewer.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
   ]);
 
   return {
@@ -124,6 +136,11 @@ export async function getOwnProfileSurface(viewer: Viewer): Promise<StudentProfi
     joinedAt: viewer.profile.created_at,
     verified: viewer.profile.role === 'student' && viewer.profile.email_verified,
     role: viewer.profile.role,
+    ratingAverage:
+      ratingResult.data?.rating_average === null || ratingResult.data?.rating_average === undefined
+        ? null
+        : Number(ratingResult.data.rating_average),
+    ratingCount: Number(ratingResult.data?.rating_count ?? 0),
     listings,
   };
 }

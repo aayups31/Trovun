@@ -11,6 +11,7 @@ import {
   LoaderCircle,
   MessageCircle,
   Send,
+  Star,
   UserRound,
   X,
 } from 'lucide-react';
@@ -280,6 +281,14 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
     setThreadError(message);
   };
 
+  const handleRated = (conversationId: string, rating: number) => {
+    setConversations((current) =>
+      current.map((conversation) =>
+        conversation.id === conversationId ? { ...conversation, sellerRating: rating } : conversation,
+      ),
+    );
+  };
+
   return (
     <Dialog.Root
       open={open}
@@ -402,6 +411,13 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
                       {threadError}
                     </p>
                   ) : null}
+                  {activeConversation.participantRole === 'buyer' &&
+                  activeConversation.listingStatus === 'sold' ? (
+                    <SellerRatingPanel
+                      conversation={activeConversation}
+                      onRated={handleRated}
+                    />
+                  ) : null}
                   <MessageComposer
                     conversationId={activeId}
                     key={activeId}
@@ -432,6 +448,86 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  );
+}
+
+function SellerRatingPanel({
+  conversation,
+  onRated,
+}: {
+  conversation: ConversationSummary;
+  onRated: (conversationId: string, rating: number) => void;
+}) {
+  const [submitting, setSubmitting] = useState<number | null>(null);
+  const [error, setError] = useState('');
+
+  const rate = async (rating: number) => {
+    setSubmitting(rating);
+    setError('');
+    try {
+      const response = await fetch(`/api/messages/${conversation.id}/rating`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating }),
+      });
+      if (!response.ok) throw new Error('rating');
+      const payload = (await response.json()) as { rating: number };
+      onRated(conversation.id, payload.rating);
+    } catch {
+      setError('Your rating could not be saved. Please try again.');
+    } finally {
+      setSubmitting(null);
+    }
+  };
+
+  return (
+    <section
+      aria-label="Rate seller"
+      className="mx-4 mb-3 rounded-[0.9rem] border border-um-gold-300/20 bg-um-gold-300/[0.065] px-4 py-3 sm:mx-5"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-bold text-white">
+            {conversation.sellerRating ? 'Thanks for rating the seller' : 'How was the seller?'}
+          </p>
+          <p className="mt-0.5 text-xs text-white/44">
+            {conversation.sellerRating
+              ? `You rated ${conversation.counterpartName} ${conversation.sellerRating} out of 5.`
+              : `Rate your completed purchase from ${conversation.counterpartName}.`}
+          </p>
+        </div>
+        <div className="flex items-center gap-1" role="group" aria-label="Seller rating">
+          {[1, 2, 3, 4, 5].map((rating) => {
+            const selected = rating <= (conversation.sellerRating ?? 0);
+            return (
+              <button
+                aria-label={`Rate seller ${rating} out of 5`}
+                className="grid size-10 place-items-center rounded-full text-um-gold-300 transition hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-um-gold-300 disabled:opacity-50"
+                disabled={submitting !== null}
+                key={rating}
+                onClick={() => void rate(rating)}
+                type="button"
+              >
+                {submitting === rating ? (
+                  <LoaderCircle aria-hidden="true" className="size-5 animate-spin" />
+                ) : (
+                  <Star
+                    aria-hidden="true"
+                    className="size-5"
+                    fill={selected ? 'currentColor' : 'none'}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      {error ? (
+        <p className="mt-2 text-xs font-medium text-red-200" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </section>
   );
 }
 

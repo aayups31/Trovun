@@ -1,5 +1,5 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import type { ImgHTMLAttributes, ReactNode } from 'react';
+import type { ComponentProps, ImgHTMLAttributes, ReactNode } from 'react';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
@@ -30,13 +30,19 @@ vi.mock('@dnd-kit/core', () => ({
   closestCenter: vi.fn(),
   DndContext: ({ children }: { children: ReactNode }) => children,
   KeyboardSensor: class KeyboardSensor {},
-  PointerSensor: class PointerSensor {},
+  MouseSensor: class MouseSensor {},
+  TouchSensor: class TouchSensor {},
   useSensor: vi.fn(() => ({})),
   useSensors: vi.fn(() => []),
 }));
 
 vi.mock('@dnd-kit/sortable', () => ({
-  arrayMove: <T,>(items: T[]) => items,
+  arrayMove: <T,>(items: T[], oldIndex: number, newIndex: number) => {
+    const next = [...items];
+    const [item] = next.splice(oldIndex, 1);
+    next.splice(newIndex, 0, item);
+    return next;
+  },
   rectSortingStrategy: {},
   SortableContext: ({ children }: { children: ReactNode }) => children,
   sortableKeyboardCoordinates: vi.fn(),
@@ -108,10 +114,19 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function renderUploader(ensureDraft = vi.fn().mockResolvedValue(LISTING_ID)) {
+function renderUploader(
+  ensureDraft = vi.fn().mockResolvedValue(LISTING_ID),
+  initialImages: ComponentProps<typeof ImageUploader>['initialImages'] = [],
+) {
   return {
     ensureDraft,
-    ...render(<ImageUploader listingId={null} ensureDraft={ensureDraft} />),
+    ...render(
+      <ImageUploader
+        listingId={initialImages.length > 0 ? LISTING_ID : null}
+        ensureDraft={ensureDraft}
+        initialImages={initialImages}
+      />,
+    ),
   };
 }
 
@@ -126,6 +141,38 @@ function jpeg(name: string) {
 }
 
 describe('ImageUploader upload reliability', () => {
+  it('reorders uploaded photos with phone-friendly arrow controls', async () => {
+    const first = {
+      id: '11111111-1111-4111-8111-111111111101',
+      url: '/first.jpg',
+      path: `seller/${LISTING_ID}/first.jpg`,
+      progress: 100,
+      status: 'uploaded' as const,
+      name: 'first.jpg',
+    };
+    const second = {
+      id: '11111111-1111-4111-8111-111111111102',
+      url: '/second.jpg',
+      path: `seller/${LISTING_ID}/second.jpg`,
+      progress: 100,
+      status: 'uploaded' as const,
+      name: 'second.jpg',
+    };
+    renderUploader(undefined, [first, second]);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Move second.jpg earlier' }));
+
+    await waitFor(() =>
+      expect(mocks.reorderListingImagesAction).toHaveBeenCalledWith({
+        listingId: LISTING_ID,
+        imageIds: [second.id, first.id],
+      }),
+    );
+    expect(screen.getByAltText('second.jpg preview').closest('div.group')).toHaveTextContent(
+      'Cover',
+    );
+  });
+
   it('shows the selected image immediately while secure registration is still pending', async () => {
     mocks.registerListingImageAction.mockImplementation(() => new Promise(() => undefined));
     renderUploader();

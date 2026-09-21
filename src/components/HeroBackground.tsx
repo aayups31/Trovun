@@ -15,10 +15,10 @@ export function HeroBackground() {
         src={campusPhoto}
         fill
         priority
+        quality={84}
         sizes="100vw"
         className={s.campusImage}
         onLoad={() => setReady(true)}
-        unoptimized
       />
     </div>
   );

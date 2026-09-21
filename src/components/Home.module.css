@@ -133,11 +133,6 @@
 .homeBrand {
   flex-shrink: 0;
 }
-.homeBrand > span:last-child > span:first-child {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 900;
-  letter-spacing: -0.045em;
-}
 .navLinks {
   display: flex;
   align-items: center;
