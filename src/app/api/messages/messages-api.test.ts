@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
   getMessageUnreadCount: vi.fn(),
   getMessageThread: vi.fn(),
   markMessageConversationRead: vi.fn(),
+  rateConversationSeller: vi.fn(),
   sendMessage: vi.fn(),
   startMessageConversation: vi.fn(),
 }));
@@ -26,6 +27,7 @@ import { GET as getUnread } from './unread/route';
 import { POST as startConversation } from './start/route';
 import { GET as getThread, POST as postMessage } from './[id]/route';
 import { POST as markRead } from './[id]/read/route';
+import { POST as rateSeller } from './[id]/rating/route';
 
 const conversationId = '71000000-0000-4000-8000-000000000001';
 const listingId = '72000000-0000-4000-8000-000000000002';
@@ -100,6 +102,18 @@ describe('messages API contract', () => {
     );
 
     expect(await response.json()).toEqual({ readAt: '2026-07-22T12:00:00.000Z' });
+  });
+
+  it('submits a seller rating for the conversation', async () => {
+    mocks.rateConversationSeller.mockResolvedValue(5);
+
+    const response = await rateSeller(
+      jsonRequest(`http://localhost:3000/api/messages/${conversationId}/rating`, { rating: 5 }),
+      context,
+    );
+
+    expect(await response.json()).toEqual({ rating: 5 });
+    expect(mocks.rateConversationSeller).toHaveBeenCalledWith(conversationId, { rating: 5 });
   });
 
   it('rejects a cross-origin write before it reaches the backend', async () => {

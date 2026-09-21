@@ -536,10 +536,18 @@ export type Database = {
     Functions: {
       claim_message_emails: {
         Args: Record<string, never>;
-        Returns: Array<{ id: string; conversation_id: string; recipient_email: string; lease: string | null }>;
+        Returns: Array<{
+          id: string;
+          conversation_id: string;
+          recipient_email: string;
+          lease: string | null;
+        }>;
       };
       message_email_is_eligible: { Args: { job_id: string }; Returns: boolean };
-      finish_message_email: { Args: { job_id: string; job_lease: string; outcome: string }; Returns: undefined };
+      finish_message_email: {
+        Args: { job_id: string; job_lease: string; outcome: string };
+        Returns: undefined;
+      };
 
       complete_onboarding: {
         Args: {

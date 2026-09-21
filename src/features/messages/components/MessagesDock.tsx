@@ -284,7 +284,9 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
   const handleRated = (conversationId: string, rating: number) => {
     setConversations((current) =>
       current.map((conversation) =>
-        conversation.id === conversationId ? { ...conversation, sellerRating: rating } : conversation,
+        conversation.id === conversationId
+          ? { ...conversation, sellerRating: rating }
+          : conversation,
       ),
     );
   };
@@ -413,10 +415,7 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
                   ) : null}
                   {activeConversation.participantRole === 'buyer' &&
                   activeConversation.listingStatus === 'sold' ? (
-                    <SellerRatingPanel
-                      conversation={activeConversation}
-                      onRated={handleRated}
-                    />
+                    <SellerRatingPanel conversation={activeConversation} onRated={handleRated} />
                   ) : null}
                   <MessageComposer
                     conversationId={activeId}
