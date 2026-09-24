@@ -13,6 +13,7 @@ export function Footer() {
               Marketplace
             </Link>
             <Link href="/signup">Join Trovun</Link>
+            <Link href="/safety">Safety & privacy</Link>
           </nav>
           <a href="#main-content" className={s.backTop}>
             Back to top ↑

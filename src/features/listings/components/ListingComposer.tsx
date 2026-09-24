@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import Image from '@/components/ui/ResilientImage';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
@@ -33,6 +34,7 @@ import { WaterlooVerificationBadge } from '@/features/profiles/components/Waterl
 import { cn } from '@/lib/utils';
 
 import { publishListingAction, saveListingDraftAction } from '../actions';
+import { MarketplaceAssistant } from '@/features/ai/MarketplaceAssistant';
 import { publishListingInBrowser, saveListingDraftInBrowser } from '../client-persistence';
 import {
   centsToDollars,
@@ -695,6 +697,52 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
             id="details"
           >
             <SectionHeading eyebrow="Item details" title="Describe the item" id="details-heading" />
+            <MarketplaceAssistant
+              purpose="listing"
+              listingId={listingId}
+              photoRevision={images
+                .filter((image) => image.status === 'uploaded')
+                .map((image) => image.id)
+                .join(',')}
+              title={values.title}
+              description={values.description}
+              condition={values.condition}
+              currentPrice={values.price}
+              onApplyPrice={(cents) => {
+                setValue('price', centsToDollars(cents), {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+                setNoticeKind('success');
+                setNotice('Suggested price filled in. You can edit it in Price & pickup.');
+              }}
+              onApply={(suggestion) => {
+                setValue('title', suggestion.title, { shouldDirty: true, shouldValidate: true });
+                setValue('description', suggestion.description, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+                if (
+                  suggestion.categoryId &&
+                  categories.some((category) => category.id === suggestion.categoryId)
+                ) {
+                  setValue('categoryId', String(suggestion.categoryId), {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+                }
+              }}
+            />
+            <p className="mt-4 text-xs leading-5 text-um-text-muted">
+              Only list items you own or may sell. Disclose defects and use a public meetup point.{' '}
+              <Link href="/safety#prohibited-items" className="underline">
+                Check what you cannot sell or give away
+              </Link>{' '}
+              Published listing details and photos may receive AI checks for human review.{' '}
+              <Link href="/safety#ai" className="underline">
+                How checks work
+              </Link>
+            </p>
 
             <div className="mt-9 space-y-9">
               <Field

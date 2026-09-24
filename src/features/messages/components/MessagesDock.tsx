@@ -425,6 +425,16 @@ export function MessagesDock({ viewerId }: MessagesDockProps) {
                     onSent={handleSent}
                     viewerId={viewerId}
                   />
+                  <div className="flex shrink-0 items-center justify-between gap-3 px-5 pb-3 text-[0.65rem] text-white/50">
+                    <span>Never share login codes or trust payment screenshots.</span>
+                    <Link
+                      className="shrink-0 underline"
+                      onClick={() => setOpen(false)}
+                      href={`/safety/report?subject=conversation&id=${activeId}`}
+                    >
+                      Report chat
+                    </Link>
+                  </div>
                 </>
               ) : (
                 <div className="relative grid h-full place-items-center px-8 text-center">

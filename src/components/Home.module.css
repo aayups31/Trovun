@@ -973,6 +973,7 @@
 }
 .footerTop nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 26px;
   color: #a4aeb6;
   font-size: 0.8rem;

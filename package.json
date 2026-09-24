@@ -20,7 +20,9 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:reset": "supabase db reset",
-    "notifications:configure": "node scripts/configure-message-emails.mjs"
+    "notifications:configure": "node scripts/configure-message-emails.mjs",
+    "ai:configure-reviews": "node scripts/configure-ai-reviews.mjs",
+    "test:ai:live": "node scripts/test-ai-live.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

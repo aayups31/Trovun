@@ -10,6 +10,8 @@ The linked Supabase project has the notification migration, `message-emails` Edg
 
 Provider secrets were installed on September 16, 2026. The scheduled worker returned HTTP 200 with `{"configured":true,"sent":0,"failed":0}` on two consecutive runs after configuration. The profile preference already works. Actual inbox delivery has **not** yet been verified; these runs had no emails to send.
 
+On September 23, a delivery investigation found jobs being enqueued and the scheduled worker returning HTTP 200, but a recent job had exhausted five send attempts. The configured sender still used `notifications@ymyunimarket.com`, whose Resend DNS records no longer resolved. Updated the local and deployed worker configuration to `Trovun <notifications@trovun.ca>` and `https://www.trovun.ca`. Trovun's Resend DNS records resolve, but the sending-only API key cannot read domain verification status or delivery logs. Successful provider acceptance and real inbox delivery remain unverified. Old failed notifications were not requeued. The alternative Next.js worker now honors `MESSAGE_EMAIL_SITE_URL` as well.
+
 ## Behavior
 
 New messages enqueue one private job for the other participant, defaulting to email enabled. Delivery waits at least one minute, skips messages already read, and rechecks the preference immediately before sending. Rapid messages are combined; a conversation sends at most one notification per ten minutes. The email contains a link to the conversation, not its message contents. Every email links to the profile opt-out. A delivery already in flight may finish when the user turns emails off.

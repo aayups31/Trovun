@@ -1,6 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
+import { processListingReviews } from '@/features/ai/moderation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { requireStudentSeller } from '@/lib/auth/session';
 import { createClient } from '@/lib/supabase/server';
@@ -16,6 +18,22 @@ import {
 import { publishErrorMessage } from './publish-error-message';
 
 const IMAGE_BUCKET = 'listing-images';
+
+function startBackgroundReviews() {
+  // The durable queue survives failures; cron or a moderator can retry it.
+  if (!process.env.OPENAI_API_KEY || !process.env.SUPABASE_SECRET_KEY) return;
+  try {
+    after(async () => {
+      try {
+        await processListingReviews();
+      } catch {
+        console.error('[ai-review] Background checks unavailable; queued work retained.');
+      }
+    });
+  } catch {
+    console.error('[ai-review] Could not start background check; queued work retained.');
+  }
+}
 
 export type ListingActionResult<T = undefined> =
   { ok: true; data: T } | { ok: false; message: string; fieldErrors?: Record<string, string> };
@@ -125,6 +143,7 @@ export async function saveListingDraftAction(
   safeRevalidatePath('/my-listings');
   safeRevalidatePath('/marketplace');
   safeRevalidatePath(`/listings/${data.id}`);
+  startBackgroundReviews();
   return { ok: true, data: data as SavedDraft };
 }
 
@@ -158,6 +177,7 @@ export async function publishListingAction(
   safeRevalidatePath('/marketplace');
   safeRevalidatePath('/my-listings');
   safeRevalidatePath(`/listings/${saved.data.id}`);
+  startBackgroundReviews();
   return { ok: true, data: { id: saved.data.id } };
 }
 
@@ -275,6 +295,7 @@ export async function finalizeListingImageAction(input: {
 
   safeRevalidatePath('/marketplace');
   safeRevalidatePath(`/listings/${input.listingId}`);
+  startBackgroundReviews();
   return { ok: true, data: { imageId: input.imageId } };
 }
 
@@ -365,6 +386,7 @@ export async function removeListingImageAction(input: {
 
   safeRevalidatePath('/marketplace');
   safeRevalidatePath(`/listings/${input.listingId}`);
+  startBackgroundReviews();
   return { ok: true, data: { imageId: input.imageId } };
 }
 
@@ -388,6 +410,7 @@ export async function reorderListingImagesAction(input: {
   if (error) return { ok: false, message: 'The image order could not be saved.' };
   safeRevalidatePath('/marketplace');
   safeRevalidatePath(`/listings/${input.listingId}`);
+  startBackgroundReviews();
   return { ok: true, data: { imageIds: input.imageIds } };
 }
 

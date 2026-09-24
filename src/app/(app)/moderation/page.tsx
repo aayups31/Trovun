@@ -5,6 +5,8 @@ import { ArrowUpRight, ClipboardList, Eye, Inbox, ShieldCheck } from 'lucide-rea
 import { ModerationAuditLog } from '@/features/moderation/components/ModerationAuditLog';
 import { getModerationWorkspace } from '@/features/moderation/queries';
 import { requireModerator } from '@/lib/auth/session';
+import { ReportQueue } from '@/features/safety/ReportQueue';
+import { ReviewQueue } from '@/features/ai/ReviewQueue';
 
 export const metadata: Metadata = {
   title: 'Moderation | Trovun',
@@ -71,10 +73,12 @@ export default async function ModerationPage({ searchParams }: ModerationPagePro
               label="Removal records"
               value={data.totalEvents.toLocaleString('en-CA')}
             />
-            <OverviewCard icon={Inbox} label="Reports" value="Off" />
+            <OverviewCard icon={Inbox} label="Reports" value="Review below" />
           </div>
         </section>
 
+        <ReportQueue />
+        <ReviewQueue />
         <section aria-labelledby="moderation-audit-heading" className="mt-12 sm:mt-14 lg:mt-16">
           <div className="mb-5 flex flex-col gap-3 border-b border-white/[0.075] pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>

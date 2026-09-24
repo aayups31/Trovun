@@ -239,6 +239,13 @@ export function SignupForm({ nextPath }: { nextPath: string }) {
 
       {!accountExists ? (
         <>
+          <p className="text-xs leading-5 text-um-text-muted">
+            Read our{' '}
+            <Link href="/safety" className="underline">
+              community rules and privacy information
+            </Link>{' '}
+            before joining. Use your own Waterloo account and keep your verification codes private.
+          </p>
           <button
             className="group flex h-[3.35rem] w-full items-center justify-center gap-3 rounded-sm bg-um-ink-950 px-5 text-sm font-black text-white transition hover:bg-um-ink-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-um-gold-400/45 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isPending}

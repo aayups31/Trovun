@@ -100,6 +100,11 @@ export function ProductShell({ avatarUrl, canSell, children, fullName, role }: P
       >
         <ProductPageMotion />
         {children}
+        <footer className="px-5 py-5 text-center text-xs text-um-text-muted">
+          <Link className="inline-flex min-h-11 items-center underline" href="/safety">
+            Community rules, safety & privacy
+          </Link>
+        </footer>
       </main>
 
       <MobileTabBar canSell={canSell} isModerator={role === 'moderator'} />

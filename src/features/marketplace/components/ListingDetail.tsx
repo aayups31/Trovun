@@ -10,6 +10,7 @@ import { ModeratorRemoveDialog } from '@/features/listings/components/ModeratorR
 import { formatCondition, formatPostedDate, formatPrice, getInitials } from '../format';
 import type { MarketplaceListing, MarketplaceViewer } from '../types';
 import { ListingGallery } from './ListingGallery';
+import { MarketplaceAssistant } from '@/features/ai/MarketplaceAssistant';
 
 type ListingDetailProps = {
   listing: MarketplaceListing;
@@ -83,6 +84,27 @@ export function ListingDetail({
             <div className="mt-8 flex items-start gap-3 border-t border-white/[0.08] py-6 text-sm text-um-text-muted">
               <ShieldCheck className="mt-0.5 size-4 shrink-0 text-um-gold-300" aria-hidden="true" />
               <p>Meet somewhere public. Inspect the item before you exchange.</p>
+            </div>
+            {canMessage && (
+              <MarketplaceAssistant
+                purpose="buyer"
+                listingId={listing.id}
+                title={listing.title}
+                description={listing.description}
+              />
+            )}
+            <div className="flex flex-wrap gap-5 text-sm">
+              <Link className="min-h-11 py-3 underline" href="/safety">
+                Safety & privacy
+              </Link>
+              {canMessage && (
+                <Link
+                  className="min-h-11 py-3 underline"
+                  href={`/safety/report?subject=listing&id=${listing.id}`}
+                >
+                  Report this listing
+                </Link>
+              )}
             </div>
           </div>
 
