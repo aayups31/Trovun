@@ -3,11 +3,12 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
+  // Next.js serves this as the public, plain-text /robots.txt endpoint.
   return {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/waterloo-marketplace/'],
+        allow: ['/', '/brand/', '/favicon.ico'],
         disallow: [
           '/api/',
           '/auth/',
@@ -23,10 +24,10 @@ export default function robots(): MetadataRoute.Robots {
           '/profile',
           '/my-listings',
           '/moderation',
+          '/safety/report',
         ],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }

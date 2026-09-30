@@ -327,7 +327,7 @@ export function ListingComposer({ sellerName, categories, initial }: ListingComp
       () => undefined,
     );
     return queuedSave;
-  }, [getValues, reset, setError, toPayload]);
+  }, [getValues, reset, setError, setNotice, setNoticeKind, toPayload]);
 
   useEffect(() => {
     if (

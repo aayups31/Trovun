@@ -61,8 +61,9 @@ export const metadata: Metadata = {
     images: ['/opengraph-image'],
   },
   icons: {
-    icon: '/icon.svg',
-    shortcut: '/icon.svg',
+    icon: [{ url: '/brand/trovun-favicon.png', type: 'image/png', sizes: '96x96' }],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/brand/trovun-apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/manifest.webmanifest',
 };

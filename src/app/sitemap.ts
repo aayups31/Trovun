@@ -20,6 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: absoluteUrl('/safety'),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
     ...SEARCH_CATEGORIES.map((category) => ({
       url: absoluteUrl(categoryHref(category.slug)),
       changeFrequency: 'weekly' as const,

@@ -17,7 +17,7 @@ it.skipIf(process.env.TROVUN_AI_LIVE_TEST !== '1')(
     })
       .png()
       .toBuffer();
-    const [draft, review, plan] = await Promise.all([
+    const [draft, review, plan, book] = await Promise.all([
       assistMarketplace(
         {
           purpose: 'listing',
@@ -32,10 +32,26 @@ it.skipIf(process.env.TROVUN_AI_LIVE_TEST !== '1')(
         'desk under $80 for a small dorm',
         z.toJSONSchema(searchPlan, { target: 'draft-7' }),
       ).then((result) => searchPlan.parse(result)),
+      assistMarketplace(
+        {
+          purpose: 'listing',
+          title: 'The Psychology of Money by Morgan Housel',
+          description: 'Paperback in good condition, with a crease on the back cover.',
+          condition: 'good',
+        },
+        [],
+        undefined,
+        [{ id: 2, name: 'Books' }],
+      ),
     ]);
     expect(draft.title.length).toBeGreaterThan(0);
     expect(review.flags.some((flag) => flag.category === 'prohibited_item')).toBe(true);
     expect(plan.maxPriceCents).toBe(8000);
+    expect('blocked' in book && book.blocked).toBe(false);
+    expect('categoryId' in book && book.categoryId).toBe(2);
+    expect('suggestedPriceCents' in book && book.suggestedPriceCents).toBeGreaterThan(0);
+    expect(book.description.toLowerCase()).toContain('crease');
+    expect(book.description.toLowerCase()).not.toContain('bestseller');
   },
   30_000,
 );

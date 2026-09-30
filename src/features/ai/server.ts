@@ -44,11 +44,16 @@ export async function assistMarketplace(
       ]
     : text;
   const schema = input.purpose === 'listing' ? listingAutofillOutput : assistanceOutput;
-  const result = schema.parse(
-    await structuredResponse(instructions, content, z.toJSONSchema(schema, { target: 'draft-7' })),
+  const output = await structuredResponse(
+    instructions,
+    content,
+    z.toJSONSchema(schema, { target: 'draft-7' }),
   );
-  if ('categoryId' in result && !categories.some((category) => category.id === result.categoryId))
-    result.categoryId = null;
-  if ('blocked' in result && result.blocked) result.suggestedPriceCents = null;
-  return result;
+  if (input.purpose === 'listing') {
+    const result = listingAutofillOutput.parse(output);
+    if (!categories.some((category) => category.id === result.categoryId)) result.categoryId = null;
+    if (result.blocked) result.suggestedPriceCents = null;
+    return result;
+  }
+  return assistanceOutput.parse(output);
 }

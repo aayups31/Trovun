@@ -39,9 +39,11 @@ describe('Trovun domain migration', () => {
     for (const url of urls) {
       const parsed = new URL(url);
       expect(parsed.origin).toBe('https://www.trovun.ca');
-      expect(parsed.pathname === '/' || parsed.pathname.startsWith('/waterloo-marketplace')).toBe(
-        true,
-      );
+      expect(
+        parsed.pathname === '/' ||
+          parsed.pathname === '/safety' ||
+          parsed.pathname.startsWith('/waterloo-marketplace'),
+      ).toBe(true);
     }
     expect(robots().sitemap).toBe('https://www.trovun.ca/sitemap.xml');
   });

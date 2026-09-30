@@ -132,10 +132,14 @@ export default function SafetyPage() {
           <p className="leading-7 text-white/75">
             Choosing an AI button sends the listing title, description, stated price and condition,
             your item question, or your search request to OpenAI. For listing drafts, you can also
-            choose to include your first three uploaded photos. This helps suggest wording, missing
-            details, questions or search filters. Private conversations, profile details and meetup
-            fields are not included. Obvious email addresses, links and phone numbers are filtered,
-            but free text may still contain personal information. Remove it before requesting help.
+            choose to include your first three uploaded photos. Autofill fills the title, short
+            description and suggested category when you request it. Price suggestions are rough CAD
+            asking-price estimates from general knowledge, not live market research or verified
+            comparable sales. You choose whether to use or edit a suggested price. AI can also
+            suggest missing details, questions or search filters. Private conversations, profile
+            details and meetup fields are not included. Obvious email addresses, links and phone
+            numbers are filtered, but free text may still contain personal information. Remove it
+            before requesting help.
           </p>
           <p className="leading-7 text-white/75">
             When you publish or change a listing, its title, description and uploaded photos may
